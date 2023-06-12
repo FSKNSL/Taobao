@@ -3,6 +3,7 @@ package jmu.service.Impl;
 
 import jmu.mapper.UserMapper;
 import jmu.service.UserService;
+import jmu.vo.Appraise;
 import jmu.vo.Orderdetail;
 import jmu.vo.Orders;
 import jmu.vo.Userinfo;
@@ -50,5 +51,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> getItemPrice(String item_id) {
         return  userMapper.getItemPrice(item_id);
+    }
+
+    @Override
+    public boolean addOrderdetail(Orderdetail orderdetail) {
+        userMapper.addOrderdetail(orderdetail);
+        return true;
+    }
+
+    @Override
+    public int payOrders(String orders_id) {
+        return   userMapper.payOrders(orders_id);
+    }
+
+    @Override
+    public boolean appraiseOrders(Appraise appraise) {
+        userMapper.appraiseOrders(appraise);
+        return true;
     }
 }

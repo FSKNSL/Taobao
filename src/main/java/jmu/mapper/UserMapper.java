@@ -1,13 +1,11 @@
 package jmu.mapper;
 
 import com.sun.org.apache.xpath.internal.operations.Or;
+import jmu.vo.Appraise;
 import jmu.vo.Orderdetail;
 import jmu.vo.Orders;
 import jmu.vo.Userinfo;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Map;
@@ -45,10 +43,22 @@ public interface UserMapper {
      public Map<String,Object> getItemPrice(@Param("item_id") String item_id);
 
 
-    /*买家在订单界面添加订单详情(购买商品)*/
+    /*买家由订单自动生成订单详情订单详情(购买商品)*/
+    @Insert("insert into  orderdetail(item_id,order_id,item_number,pay_price,total_discount)values(#{item_id},#{order_id},#{item_number},#{pay_price},#{total_discount})")
+    public   boolean addOrderdetail(Orderdetail orderdetail);
 
 
-    /*买家支付*/
+
+    /*买家支付,虚拟支付,点击相应的order完成虚拟支付*/
+    @Update("update  orders set order_status='已支付' where order_id=#{order_id}")
+    public   int  payOrders(String orders_id);
+
+    /*买家对订单进行评价*/
+    @Insert("insert  into appraise values(#{user_id},#{order_id},#{appraise_time},#{appraise_grade},#{appraise_content}) ")
+    public  boolean appraiseOrders(Appraise appraise);
+
+
+
 
 
 }
