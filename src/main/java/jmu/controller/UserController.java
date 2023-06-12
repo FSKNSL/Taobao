@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    /*登陆测试*/
     @RequestMapping("/login")
     public Result login(@RequestParam String user_id,@RequestParam String user_pwd)
     {
@@ -25,6 +27,7 @@ public class UserController {
 
     }
 
+    /*注册测试*/
     @RequestMapping("/enroll")
     public  Result enroll(@RequestBody Userinfo userinfo)
     {
