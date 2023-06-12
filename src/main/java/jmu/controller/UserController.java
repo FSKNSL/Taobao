@@ -3,6 +3,7 @@ package jmu.controller;
 
 import jmu.mapper.UserMapper;
 import jmu.service.UserService;
+import jmu.vo.Appraise;
 import jmu.vo.Orderdetail;
 import jmu.vo.Orders;
 import jmu.vo.Userinfo;
@@ -87,12 +88,12 @@ public class UserController {
 
 
     @RequestMapping("/addOrder")
-            public Result   addOrders(String item_id)
+            public Result   addOrders(String item_id,int item_number)
     {
         Map<String,Object> itemprice=userService.getItemPrice(item_id);
         float price=(float)itemprice.get("item_price");
         float discount=(float)itemprice.get("item_discount");
-       float Itemprice=price*discount;
+       float Itemprice=item_number*price*discount;
         /*获取当前日志时间*/
         Date date=new Date();
         SimpleDateFormat dateFormat=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
@@ -113,11 +114,56 @@ public class UserController {
         orders.setOrder_status("未支付");
         orders.setOrder_totalprice(Itemprice);
         boolean flag=userService.addOrder(orders);
+  // return new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag);
 
-   return new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag);
+        /*添加订单详情操作*/
+        Orderdetail orderdetail=new Orderdetail();
+        orderdetail.setItem_id(item_id);
+        orderdetail.setOrder_id(randomNumber);
+        orderdetail.setItem_number(item_number);
+        orderdetail.setPay_price(Itemprice);
+        orderdetail.setTotal_discount(discount);
+        boolean flag2=userService.addOrderdetail(orderdetail);
+
+        return new Result(flag2?Code.INSERT_OK:Code.INSERT_ERR,flag2);
 
 
     }
+
+    /*用户支付订单*/
+    @RequestMapping("/payOrders")
+    public Result  payOrders(String order_id)
+    {
+       int rows=userService.payOrders(order_id);
+        Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
+        String msg=rows!=0?"用户支付成功!":"用户支付失败,请重试!";
+        return new Result(code,rows,msg);
+
+    }
+
+    /*用户对订单评价*/
+    @RequestMapping("/doappraiseOrders")
+
+    public  Result  appraiseOrders(  String user_id,String order_id,String appraise_grade,String appraise_content)
+    {
+
+
+        Date date=new Date();
+        SimpleDateFormat dateFormat=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        String  create_time=dateFormat.format(date);
+
+        Appraise appraise=new Appraise();
+        appraise.setUser_id(user_id);
+        appraise.setOrder_id(order_id);
+        appraise.setAppraise_time(create_time);
+        appraise.setAppraise_grade(appraise_grade);
+        appraise.setAppraise_content(appraise_content);
+        boolean flag=userService.appraiseOrders(appraise);
+        Integer code=flag!=false?Code.INSERT_OK:Code.INSERT_ERR;
+        String msg=flag!=false?"订单评价成功,感谢您的参与":"订单未完成评价!";
+        return new Result(code,flag,msg);
+    }
+
 
 
 

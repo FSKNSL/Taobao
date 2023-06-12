@@ -2,6 +2,7 @@ package jmu.controller;
 
 
 import jmu.service.UserService;
+import jmu.vo.Appraise;
 import jmu.vo.Orderdetail;
 import jmu.vo.Orders;
 import jmu.vo.Userinfo;
@@ -73,6 +74,7 @@ public class UserController2 {
         Integer code=ordersList!=null?Code.GET_OK:Code.GET_ERR;
         String msg=ordersList!=null?"":"该用户尚未下单!";
         Result result= new Result(code,ordersList,msg);
+        model.addAttribute("result",result);
         model.addAttribute("ordersList",ordersList);
         /*跳转至订单页面*/
         return "searchOrders";
@@ -80,12 +82,14 @@ public class UserController2 {
 
     /*用户查看订单详情*/
     @RequestMapping("/searchOrderdetail")
-    public  String  searchOrderdetail(@RequestParam String order_id)
+    public  String  searchOrderdetail(@RequestParam String order_id,Model model)
     {
         List<Orderdetail> orderdetailList=userService.searchOrderdetail(order_id);
         Integer code=orderdetailList!=null?Code.GET_OK:Code.GET_ERR;
         String msg=orderdetailList!=null?"":"该用户尚未购买商品!";
         Result result=new  Result(code,orderdetailList,msg);
+        model.addAttribute("orderdetailList",orderdetailList);
+        model.addAttribute("result",result);
         /*跳转至订单详情页面*/
         return  "searchOrderdetail";
     }
@@ -95,12 +99,12 @@ public class UserController2 {
 
     @RequestMapping("/addOrder")
     /*前端页面勾选商品,传递相应的商品id*/
-    public   String    addOrders(String item_id)
+    public   String    addOrders(String item_id,int item_number,Model model)
     {
         Map<String,Object> itemprice=userService.getItemPrice(item_id);
         float price=(float)itemprice.get("item_price");
         float discount=(float)itemprice.get("item_discount");
-        float Itemprice=price*discount;
+        float Itemprice=item_number*price*discount;
         System.out.println("itemprice="+Itemprice);
         /*获取当前日志时间*/
         Date date=new Date();
@@ -115,7 +119,7 @@ public class UserController2 {
         System.out.println("随机生成的十二位数为：" + randomNumber);
         /*随机生成12位数的订单编号*/
         Orders orders=new Orders();
-        String user_id=(String)request.getSession().getAttribute("user_id");
+        String user_id=(String)request.getSession().getAttribute("user_id");/*获取用户id*/
         orders.setOrder_id(String.valueOf(randomNumber));
         orders.setUser_id(user_id);
         orders.setCreate_time(create_time);
@@ -124,13 +128,22 @@ public class UserController2 {
         boolean flag=userService.addOrder(orders);
          String msg=flag!=false?"用户添加订单成功!":"添加订单失败";
 
-        Result  result= new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag);
+        Result  result1= new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag);
 
         /*这里用户在商品界面勾选了响应的商品后可点击下单按钮,订单会根据用户的选择来生成相应的订单详情记录*/
 
+
         /*自动生成相应的订单详情记录*/
-
-
+        /*添加订单详情操作*/
+        Orderdetail orderdetail=new Orderdetail();
+        orderdetail.setItem_id(item_id);
+        orderdetail.setOrder_id(randomNumber);
+        orderdetail.setItem_number(item_number);
+        orderdetail.setPay_price(Itemprice);
+        orderdetail.setTotal_discount(discount);
+        boolean flag2=userService.addOrderdetail(orderdetail);
+        Result result2=new Result(flag2?Code.INSERT_OK:Code.INSERT_ERR,flag2);
+        String msg2=flag2!=false?"用户订单详情记录成功!":"订单详情记录失败";
 
 
         /*返回到了下订单完成界面*/
@@ -138,6 +151,62 @@ public class UserController2 {
 
 
     }
+
+    /*用户支付订单*/
+    @RequestMapping("/payOrders")
+    public String   payOrders(String order_id,Model model)
+    {
+        int rows=userService.payOrders(order_id);
+        Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
+        String msg=rows!=0?"用户支付成功!":"用户支付失败,请重试!";
+        Result result= new Result(code,rows,msg);
+        model.addAttribute("result",result);
+
+        /*支付成功界面*/
+        return "dopayOrders";
+
+    }
+
+
+    /*用户评价订单*/
+
+    /*1.用户点击按钮跳转到评价页面*/
+    /*需要传入参数:订单编号*/
+
+    @RequestMapping("/doappraiseOrders")
+    public String dooappraiseOrders(String order_id,Model model)
+    {
+        String user_id=(String)request.getSession().getAttribute("user_id");
+        /*session自动获取user_id*/
+        /*获取当前日志时间*/
+        Date date=new Date();
+        SimpleDateFormat dateFormat=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        String  create_time=dateFormat.format(date);
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("order_id",order_id);
+        model.addAttribute("create_time",create_time);
+
+        /*这是一个表单,用于用户填写评价*/
+        /*将默认参数传递到表单中*/
+        return "appraise";
+
+    }
+    @RequestMapping("/appraiseOrders")
+    public String appraiseOrders(Appraise appraise,Model model)
+    {
+        boolean flag=userService.appraiseOrders(appraise);
+        String msg=flag!=false?"用户评价成功,感谢您的参与":"未成功评价,请重试!";
+        Result result=new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag,msg);
+
+        /*这里的是一个返回结果界面*/
+        /*可更改为模态框*/
+        return  "searchOrders";
+    }
+
+
+
+
+
 
 
 
