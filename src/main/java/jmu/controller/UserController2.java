@@ -2,16 +2,15 @@ package jmu.controller;
 
 
 import jmu.service.UserService;
-import jmu.vo.Appraise;
-import jmu.vo.Orderdetail;
-import jmu.vo.Orders;
-import jmu.vo.Userinfo;
+import jmu.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.print.attribute.standard.PresentationDirection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
@@ -68,6 +67,38 @@ public class UserController2 {
         return "login";
 
     }
+
+    /*用户个人信息查看*/
+    /*用户查看个人信息*/
+    @RequestMapping("/showUserInfo")
+    public String  showUserInfo(Model model)
+    {
+         String user_id=(String)request.getSession().getAttribute("user_id");
+        Userinfo userinfo=userService.showUserInfo(user_id);
+        Integer code=userinfo!=null?Code.GET_OK:Code.GET_ERR;
+        String msg=userinfo!=null?"":"用户信息获取失败!";
+        Result result= new Result(code,userinfo,msg);
+        model.addAttribute("result",result);
+        return "showUserInfo";
+    }
+
+    /*用户修改个人信息*/
+    @RequestMapping("/alterUserInfo")
+    public  String   alterUserInfo(String user_nickname,String user_email,String user_tel,String user_pwd,Model model)
+    {
+        String user_id=(String)request.getSession().getAttribute("user_id");
+        Integer rows=userService.alterUserInfo(user_id,user_nickname,user_email,user_tel,user_pwd);
+        Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
+        String msg=rows!=0?"用户信息更新成功!":"用户更新失败,请重试!";
+       Result result= new Result(code,rows,msg);
+       model.addAttribute("result",result);
+
+       /*更新完成后本页面自动刷新*/
+       return "showUserInfo";
+    }
+
+
+
 
 /*用户查看订单*/
     @RequestMapping("/searchOrders")
@@ -203,6 +234,99 @@ public class UserController2 {
         /*可更改为模态框*/
         return  "searchOrders";
     }
+
+    /*展示所有商品界面*/
+    @RequestMapping("/showAllItems")
+    public  String showAllItems(Model model)
+    {
+        /*商品列表页信息*/
+        List<Orderitem> orderitemList=userService.listAllItems();
+        Integer code=orderitemList!=null?Code.GET_OK:Code.GET_ERR;
+        String msg=orderitemList!=null?"商品列表页如下":"未查询到商品信息,请刷新页面重试!";
+        Result  result= new Result(code,orderitemList,msg);
+        model.addAttribute("result2",result);
+        /*跳转到商品列表网页*/
+        return "showAllItems";
+    }
+
+    /*用户查看购物车*/
+
+    @RequestMapping("/listAllCart")
+    public String   listAllCart(String user_id,Model model)
+    {
+        List<Shoppingcart>shoppingcartList=userService.listAllCart(user_id);
+        Integer code=shoppingcartList!=null?Code.GET_OK:Code.GET_ERR;
+        String msg=shoppingcartList!=null?"购物车信息如下":"购物车空空如也,byd还不快来买";
+        Result result=  new Result(code,shoppingcartList,msg);
+        model.addAttribute("result",result);
+        /*跳转至购物车界面,在此界面能够结算或返回商品页面继续浏览*/
+        return "showShoppingCart";
+    }
+
+    /*点击商品加入购物车*/
+    /*在商品列表页添加购物车,应该传入orderitem的一些信息*/
+    @RequestMapping("/addShoppingCart")
+    public String   addShopping(String item_id,String item_name,String item_url,float item_price,float item_discount,Model model)
+    {
+        String user_id=(String)request.getSession().getAttribute("user_id");
+        /*session自动获取user_id*/
+        Shoppingcart shoppingcart=new Shoppingcart();
+        shoppingcart.setUser_id(user_id);
+        shoppingcart.setItem_id(item_id);
+        shoppingcart.setItem_url(item_url);
+        shoppingcart.setItem_price(item_price*item_discount);
+        /*打折后实际付款价格*/
+        shoppingcart.setItem_name(item_name);
+        shoppingcart.setItem_number(1);
+        /*商品数量默认为1,进入购物车界面可通过点击修改*/
+        boolean flag=userService.addShoppingCart(shoppingcart);
+        Result result= new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag);
+        model.addAttribute("result",result);
+
+        /*这里的返回页面前端可自定义,可选择去购物车结算还是继续购物*/
+        return "doaddShoppingCart";
+    }
+
+
+
+    /*在购物车界面的修改操作*/
+    /*主要是对商品数量的修改,和价格的修改*/
+
+    @RequestMapping("/alterShoppingCart")
+    public String alterShoppingCart(int item_number,float item_price,int cart_id,Model model)
+    {
+        float  alter_price=item_number*item_price;
+        Integer rows=userService.alterShoppingCart(item_number,alter_price,cart_id);
+        Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
+        String msg=rows!=0?"购物车信息更新成功":"购物车信息更新失败,请重试!";
+        Result result = new Result(code,rows,msg);
+        /*修改完成后依然在购物车界面,提示信息?*/
+        return  "showShoppingCart";
+    }
+
+    /*按照传入的cart_id删除一条购物车记录*/
+    @RequestMapping("/deleteShoppingcart")
+    public String  deleteShoppingcart(int cart_id,Model model)
+    {
+        Integer rows=userService.deleteShoppingcart(cart_id);
+        Integer code=rows!=0?Code.DELETE_OK:Code.DELETE_ERR;
+        String msg=rows!=0?"购物车删除成功":"购物车信息未成功删除,请重试!";
+        Result result= new Result(code,rows,msg);
+        /*删除完成后依然在购物车界面,提示信息?*/
+        return "shopShoppingcart";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

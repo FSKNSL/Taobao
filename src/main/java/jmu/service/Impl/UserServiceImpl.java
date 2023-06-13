@@ -3,10 +3,7 @@ package jmu.service.Impl;
 
 import jmu.mapper.UserMapper;
 import jmu.service.UserService;
-import jmu.vo.Appraise;
-import jmu.vo.Orderdetail;
-import jmu.vo.Orders;
-import jmu.vo.Userinfo;
+import jmu.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +25,17 @@ public class UserServiceImpl implements UserService {
         userMapper.enroll(userinfo);
         return  true;
     }
+
+    @Override
+    public Userinfo showUserInfo(String user_id) {
+        return userMapper.showUserInfo(user_id);
+    }
+
+    @Override
+    public int alterUserInfo(String user_id,String user_nickname, String user_email, String user_tel, String user_pwd) {
+        return userMapper.alterUserInfo(user_id,user_nickname,user_email,user_tel,user_pwd);
+    }
+
 
     @Override
     public List<Orders> searchOrders(String user_id) {
@@ -68,5 +76,31 @@ public class UserServiceImpl implements UserService {
     public boolean appraiseOrders(Appraise appraise) {
         userMapper.appraiseOrders(appraise);
         return true;
+    }
+
+    @Override
+    public List<Orderitem> listAllItems() {
+        return userMapper.listAllItems();
+    }
+
+    @Override
+    public List<Shoppingcart> listAllCart(String user_id) {
+        return  userMapper.listAllCart(user_id);
+    }
+
+    @Override
+    public boolean addShoppingCart(Shoppingcart shoppingcart) {
+        userMapper.addShoppingCart(shoppingcart);
+        return true;
+    }
+
+    @Override
+    public int alterShoppingCart(int item_number, float item_price, int cart_id) {
+        return userMapper.alterShoppingCart(item_number,item_price,cart_id);
+    }
+
+    @Override
+    public int deleteShoppingcart(int cart_id) {
+        return userMapper.deleteShoppingcart(cart_id);
     }
 }
