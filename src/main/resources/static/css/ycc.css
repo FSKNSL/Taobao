@@ -1,0 +1,179 @@
+
+.index-img{
+    animation-name: scaleDraw; /*关键帧名称*/
+    animation-iteration-count: infinite; /*动画播放的次数*/
+    animation-duration: 10s;
+}
+@keyframes scaleDraw {
+/*定义关键帧、scaleDrew是需要绑定到选择器的关键帧名称*/
+    0% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.05);
+
+    }
+    50% {
+        transform: scale(1);
+    }
+    75% {
+        transform: scale(1.05);
+    }
+}
+
+/* 个人信息页部分 */
+.div-card{
+    border-style: double;
+    box-shadow: black 1px 1px 5px;
+    margin-bottom: 20px;
+    border-radius: 20px 20px;
+    margin-inline: 15px;
+}
+.ul-text-show{
+    padding-left: 0px;
+}
+.ul-text-show li{
+    list-style-type: none;
+    color: #084298;
+}
+.ul-text-show li span{
+    font-size: 18px;
+    color: purple;
+}
+
+.h-title-black{
+    background-color: black;
+    padding: 10px;
+    font-size: 20px;
+    color: white;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.h-title-blue{
+    background-color: steelblue;
+    padding: 10px;
+    font-size: 20px;
+    text-align: center;
+    border-radius: 10px;
+}
+.img-circle{
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+}
+.img-logo{
+    width: 150px;
+    height: 80px;
+    opacity: 0.5;
+}
+.img-logo-shop-center{
+    width: 150px;
+    height: 120px;
+    border-radius: 5px 5px;
+    left: 20px;
+    position: absolute;
+}
+
+/* 购买记录 订单的表格样式*/
+.table-order > tbody > tr > th > img{
+    width: 250px;
+    height: 150px;
+    border-radius: 10px 10px;
+
+}
+.accordion-flush .accordion-item .accordion-button{
+    border-radius: 10px 10px;
+}
+
+/* 用户信息页面的左侧导航栏 */
+
+#left-card-div button{
+    text-align: left;
+    background: black;
+    color: white;
+    border: 1px double;
+    margin-bottom: 10px;
+    border-radius: 10px 10px;
+}
+
+
+/* 商品卡片 */
+.card-commodity{
+    box-shadow: black 1px 1px 5px;
+    border-radius: 10px 10px;
+    width: 250px;
+    margin-inline: auto;
+}
+.card-commodity img{
+    border-radius: 10px 10px;
+    width: 250px;
+    height: 220px;
+}
+.card-commodity h5{
+    font-size: 1.5rem;
+    color: #d42929;
+}
+.card-commodity h5 span{
+    font-size: 1rem;
+    color: rgba(105, 102, 102, 0.97);
+}
+.card-commodity a{
+    text-decoration: none;
+    color: black;
+    font-size: 0.5rem;
+}
+.card-commodity-row{
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+/* 首页商品类型 */
+.card-commodity-type button{
+    margin-inline: 10px;
+    margin-top: 30px;
+
+}
+/* 商品页面分页 */
+
+.card-shop-page-head ul{
+    font-size: 1.0rem;
+    color: #0e5bca;
+}
+.card-shop-page-head ul li, .card-shop-page-end ul li {
+    margin-inline: 5px;
+}
+
+/* 发布商品页面 */
+.card-publish img{
+    width: 200px;
+    height: 200px;
+}
+/* 图片的配置  设置input标签的样式*/
+.form-publish-img-parent, #form-publish-img{
+    /*border: solid; !*测试时显示边框样式*!*/
+    position: absolute;
+    width: 600px;
+    height: 400px;
+}
+#form-publish-img-show{
+    width: 600px;
+    height: 400px;
+}
+.form-publish-img-parent{
+    opacity: 0;
+}
+#form-publish-img{
+    top: 0px;
+}
+.card-commodity{
+    transition-duration: 0.5s;
+}
+.card-commodity:hover{
+    transform: scale(1.1);
+}
+
+/* 分页按钮 */
+.page-link{
+    border-radius: 5px;
+}
