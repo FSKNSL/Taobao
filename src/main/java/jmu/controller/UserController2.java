@@ -49,20 +49,23 @@ public class UserController2 {
     }
 
     @RequestMapping("/dologin")
-    public  String doLogin(){return  "login";}
-
-
+    public  String doLogin(Model model){
+        model.addAttribute("result",new Result());
+        return  "login";
+    }
+    @RequestMapping("/doenroll")
+    public String doenroll(){return "register";}
     /*用户注册*/
     @RequestMapping("enroll")
     public String enroll(Userinfo userinfo ,Model model)
     {
         boolean flag=userService.enroll(userinfo);
-        String msg=flag!=flag?"注册成功":"注册失败!";
+        String msg=flag!=false?"注册成功":"注册失败!";
         Result result=new Result(flag?Code.ENROLL_OK:Code.ENROLL_ERR,flag,msg);
         model.addAttribute("result",result);
         model.addAttribute("userinfo",userinfo);
         /*注册成功后返回前端自动跳转到登陆界面*/
-        return "doEnroll";
+        return "login";
 
     }
 
@@ -93,8 +96,6 @@ public class UserController2 {
         /*跳转至订单详情页面*/
         return  "searchOrderdetail";
     }
-
-
 
 
     @RequestMapping("/addOrder")
