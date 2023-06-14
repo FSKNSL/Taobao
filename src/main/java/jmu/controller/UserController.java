@@ -3,10 +3,8 @@ package jmu.controller;
 
 import jmu.mapper.UserMapper;
 import jmu.service.UserService;
-import jmu.vo.Appraise;
-import jmu.vo.Orderdetail;
-import jmu.vo.Orders;
-import jmu.vo.Userinfo;
+import jmu.vo.*;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +45,30 @@ public class UserController {
         boolean flag=userService.enroll(userinfo);
         return new Result(flag?Code.ENROLL_OK:Code.ENROLL_ERR,flag);
     }
+
+
+
+    /*用户查看个人信息*/
+    @RequestMapping("/showUserInfo")
+    public Result showUserInfo(String user_id)
+    {
+
+        Userinfo userinfo=userService.showUserInfo(user_id);
+        Integer code=userinfo!=null?Code.GET_OK:Code.GET_ERR;
+        String msg=userinfo!=null?"":"用户信息获取失败!";
+        return new Result(code,userinfo,msg);
+    }
+    /*用户修改个人信息*/
+    @RequestMapping("/alterUserInfo")
+    public  Result  alterUserInfo(String user_id,String user_nickname,String user_email,String user_tel,String user_pwd)
+    {
+        Integer rows=userService.alterUserInfo(user_id,user_nickname,user_email,user_tel,user_pwd);
+        Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
+        String msg=rows!=0?"用户信息更新成功!":"用户更新失败,请重试!";
+        return new Result(code,rows,msg);
+    }
+
+
 
     /*查看订单测试*/
 
@@ -163,6 +185,65 @@ public class UserController {
         String msg=flag!=false?"订单评价成功,感谢您的参与":"订单未完成评价!";
         return new Result(code,flag,msg);
     }
+
+    /*展示所有商品的信息*/
+@RequestMapping("/listAllItems")
+    public Result  listAllItems()
+{
+      List<Orderitem> orderitemList=userService.listAllItems();
+      Integer code=orderitemList!=null?Code.GET_OK:Code.GET_ERR;
+      String msg=orderitemList!=null?"商品列表页如下":"未查询到商品信息,请刷新页面重试!";
+      return  new Result(code,orderitemList,msg);
+
+}
+
+/*显示当前用户购物车信息*/
+    @RequestMapping("/listAllCart")
+    public Result  listAllCart(String user_id)
+    {
+        List<Shoppingcart>shoppingcartList=userService.listAllCart(user_id);
+        Integer code=shoppingcartList!=null?Code.GET_OK:Code.GET_ERR;
+        String msg=shoppingcartList!=null?"购物车信息如下":"购物车空空如也,byd还不快来买";
+        return  new Result(code,shoppingcartList,msg);
+    }
+
+
+
+    /*点击商品加入购物车*/
+    @RequestMapping("/addShoppingCart")
+    public Result  addShopping(@RequestBody  Shoppingcart shoppingcart)
+    {
+         boolean flag=userService.addShoppingCart(shoppingcart);
+                 return new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag);
+    }
+
+
+    /*对购物车的修改操作*/
+    /*主要是对商品数量的修改,和价格的修改*/
+
+    @RequestMapping("/alterShoppingCart")
+    public Result alterShoppingCart(int item_number,float item_price,int cart_id)
+    {
+        float  alter_price=item_number*item_price;
+        Integer rows=userService.alterShoppingCart(item_number,alter_price,cart_id);
+        Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
+        String msg=rows!=0?"购物车信息更新成功":"购物车信息更新失败,请重试!";
+        return new Result(code,rows,msg);
+    }
+
+    /*按照传入的cart_id删除一条购物车记录*/
+    @RequestMapping("/deleteShoppingcart")
+    public Result deleteShoppingcart(int cart_id)
+    {
+        Integer rows=userService.deleteShoppingcart(cart_id);
+        Integer code=rows!=0?Code.DELETE_OK:Code.DELETE_ERR;
+        String msg=rows!=0?"购物车删除成功":"购物车信息未成功删除,请重试!";
+        return new Result(code,rows,msg);
+    }
+
+
+
+
 
 
 

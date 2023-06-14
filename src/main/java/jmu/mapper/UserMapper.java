@@ -1,10 +1,6 @@
 package jmu.mapper;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
-import jmu.vo.Appraise;
-import jmu.vo.Orderdetail;
-import jmu.vo.Orders;
-import jmu.vo.Userinfo;
+import jmu.vo.*;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -22,6 +18,12 @@ public interface UserMapper {
     @Insert("insert into userinfo  values(#{user_id},#{user_nickname},#{user_email},#{user_tel},#{user_avatar},#{user_pwd})")
     public   boolean enroll(Userinfo userinfo);
 
+    /*用户查看个人信息*/
+    @Select("select * from  userinfo where user_id=#{user_id}")
+    public  Userinfo showUserInfo(String user_id);
+
+    @Update("update userinfo set user_nickname=#{user_nickname},user_email=#{user_email},user_tel=#{user_tel},user_pwd=#{user_pwd}where user_id=#{user_id}")
+    public   int  alterUserInfo(String user_id,String user_nickname,String user_email,String user_tel,String user_pwd);
     /*买家查看订单*/
     @Select("select * from  orders where user_id=#{user_id}")
     public List<Orders> searchOrders(String  user_id);
@@ -57,6 +59,31 @@ public interface UserMapper {
     @Insert("insert  into appraise values(#{user_id},#{order_id},#{appraise_time},#{appraise_grade},#{appraise_content}) ")
     public  boolean appraiseOrders(Appraise appraise);
 
+
+    /*展示所有商品的信息,在douserLogin里面自动显示*/
+    @Select("select * from orderitem")
+    public  List<Orderitem>listAllItems();
+
+
+    /*用户查看当前购物车*/
+    @Select("select * from shoppingcart where user_id=#{user_id}")
+    public   List<Shoppingcart>listAllCart(String user_id);
+
+
+    /*用户点击商品下方添加至购物车操作*/
+    @Insert("insert into shoppingcart (user_id,item_id,item_url,item_price,item_number,item_name) values(#{user_id},#{item_id},#{item_url},#{item_price},#{item_number},#{item_name})")
+    public boolean addShoppingCart(Shoppingcart shoppingcart);
+
+
+
+    /*按照cart_id修改购物车商品数量和价格,价格随数量同时改动*/
+    @Update("update shoppingcart  set  item_number=#{item_number},item_price=#{item_price} where cart_id=#{cart_id}")
+    public  int  alterShoppingCart(int item_number,float item_price,int cart_id);
+
+
+    /*按照cart_id删除购物车记录*/
+    @Delete("delete   from shoppingcart where cart_id=#{cart_id}")
+    public int deleteShoppingcart(int cart_id);
 
 
 
