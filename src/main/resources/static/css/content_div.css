@@ -1,0 +1,26 @@
+.father_box {
+    margin-top: 5px;
+    position: relative;
+    width: 90%;
+    height: 660px;
+    margin-left: 5%;
+    margin-right: 5%;
+    background-color: rgba(177, 243, 228, 0.35);
+}
+
+.content_one {
+    overflow: hidden;
+    padding-top: 3px;
+    width: 18%;
+    height: 660px;
+    background-color: #ffffff;
+}
+
+.content_two {
+    position: relative;
+    left: 18%;
+    top: -660px;
+    width: 82%;
+    height: 660px;
+    background-color: rgb(227, 224, 224);
+}
