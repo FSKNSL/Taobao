@@ -69,6 +69,26 @@ public class UserController {
     }
 
 
+    @RequestMapping("/alterAddress")
+    public  Result alterAddress(String district_id,String receipt_name,String receipt_tel,String detail_address,String receipt_email,String  address_id)
+    {
+        Integer rows= userService.alterAddress(district_id,receipt_name,receipt_tel,detail_address,receipt_email,address_id);
+        Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
+        String msg=rows!=0?"用户地址更新成功!":"地址更新失败,请重试!";
+        return new Result(code,rows,msg);
+
+    }
+
+    @RequestMapping("/addAddress")
+    public  Result addAddress(@RequestBody Address address)
+    {
+        boolean flag=userService.addAddress(address);
+        return new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag);
+    }
+
+
+
+
 
     /*查看订单测试*/
 
@@ -134,6 +154,8 @@ public class UserController {
         orders.setUser_id(user_id);
         orders.setCreate_time(create_time);
         orders.setOrder_status("未支付");
+        orders.setReceipt_status("未收货");
+        orders.setShipment_status("未发货");
         orders.setOrder_totalprice(Itemprice);
         boolean flag=userService.addOrder(orders);
   // return new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag);

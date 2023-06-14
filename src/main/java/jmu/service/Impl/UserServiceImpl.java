@@ -36,6 +36,37 @@ public class UserServiceImpl implements UserService {
         return userMapper.alterUserInfo(user_id,user_nickname,user_email,user_tel,user_pwd);
     }
 
+    @Override
+    public List<Address> showAddress(String user_id) {
+        return userMapper.showAddress(user_id);
+    }
+
+    @Override
+    public int alterAddress(String district_id, String receipt_name, String receipt_tel, String detail_address, String receipt_email, String address_id) {
+        return userMapper.alterAddress(district_id,receipt_name,receipt_tel,detail_address,receipt_email,address_id);
+    }
+
+    @Override
+    public List<Province> listAllProvince() {
+        return userMapper.listAllProvince();
+    }
+
+    @Override
+    public List<City> listAllCity() {
+        return userMapper.listAllCity();
+    }
+
+    @Override
+    public List<District> listAllDistrict() {
+        return userMapper.listAllDistrict();
+    }
+
+    @Override
+    public boolean addAddress(Address address) {
+        userMapper.addAddress(address);
+        return true;
+    }
+
 
     @Override
     public List<Orders> searchOrders(String user_id) {

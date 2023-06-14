@@ -22,6 +22,38 @@ public interface UserMapper {
     @Select("select * from  userinfo where user_id=#{user_id}")
     public  Userinfo showUserInfo(String user_id);
 
+
+    /*用户查看收货地址*/
+    @Select("select * from address where user_id=#{user_id}")
+    public  List<Address> showAddress(String user_id);
+
+    /*用户编辑收货地址*/
+    @Update("update address set district_id=#{district_id},receipt_name=#{receipt_name},receipt_tel=#{receipt_tel},detail_address=#{detail_address},receipt_email=#{receipt_email} where address_id=#{address_id}")
+    public  int  alterAddress(String district_id,String receipt_name,String receipt_tel,String detail_address,String receipt_email,String address_id);
+
+    /*传入省信息*/
+
+    @Select("select * from province")
+    public List<Province>listAllProvince();
+
+
+
+    /*传入市信息*/
+    @Select("select * from  city")
+    public List<City>listAllCity();
+
+
+    /*传入区信息*/
+    @Select("select * from district")
+    public  List<District>listAllDistrict();
+
+
+    /*用户新建收货地址*/
+    @Insert("insert  into address(district_id,user_id,receipt_name,receipt_tel,detail_address,receipt_email)values(#{district_id},#{user_id},#{receipt_name},#{receipt_tel},#{detail_address},#{receipt_email})")
+    public   boolean addAddress(Address address);
+
+
+
     @Update("update userinfo set user_nickname=#{user_nickname},user_email=#{user_email},user_tel=#{user_tel},user_pwd=#{user_pwd}where user_id=#{user_id}")
     public   int  alterUserInfo(String user_id,String user_nickname,String user_email,String user_tel,String user_pwd);
     /*买家查看订单*/
@@ -35,7 +67,7 @@ public interface UserMapper {
     /*买家生成订单*/
     /*步骤 :  1.勾选商品  2.点击确认生成订单  3.可以旺订单中添加商品*/
     /*订单其他信息在用户支付后商家下单后才更新*/
-         @Insert("insert into  orders(order_id,user_id,create_time,order_status,order_totalprice) values(#{order_id},#{user_id},#{create_time},#{order_status},#{order_totalprice})")
+         @Insert("insert into  orders(order_id,user_id,create_time,order_status,order_totalprice,receipt_status,shipment_status) values(#{order_id},#{user_id},#{create_time},#{order_status},#{order_totalprice},#{receipt_status},#{shipment_status})")
     public    boolean addOrder(Orders orders);
 
 

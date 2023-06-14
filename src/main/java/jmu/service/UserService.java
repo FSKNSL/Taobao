@@ -17,7 +17,25 @@ public interface UserService {
 
     public  Userinfo showUserInfo(String user_id);/*用户查看个人信息*/
 
+
     public   int  alterUserInfo(String user_id,String user_nickname,String user_email,String user_tel,String user_pwd);/*修改个人信息*/
+
+
+    public  List<Address> showAddress(String user_id);/*查看地址信息*/
+
+    /*根据当前地址id修改地址信息*/
+    public  int  alterAddress(String district_id,String receipt_name,String receipt_tel,String detail_address,String receipt_email,String address_id);
+
+
+    public List<Province>listAllProvince();
+
+    public List<City>listAllCity();
+
+    public  List<District>listAllDistrict();
+
+
+    public   boolean addAddress(Address address);/*用户新增收货地址*/
+
 
     public List<Orders>  searchOrders(String user_id);/*查看订单*/
 

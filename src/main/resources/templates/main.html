@@ -44,7 +44,7 @@
     <br/>
     <div class="row row-cols-1 row-cols-md-4 g-4">
         <div class="col" th:each="item,iterStat:${result2.data}" th:if="${iterStat.index<4}">
-            <div class="card h-100" th:href="@">
+            <div class="card h-100" >
                 <img th:src="${item.item_url}" class="card-img-top" alt="..." style="height: 300px">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${item.item_price}" style="color: orangered"></h5>

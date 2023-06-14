@@ -10,5 +10,6 @@ public class Address {
     private String receipt_name;
     private  String receipt_tel;
     private String detail_address;
+    private String receipt_email;
 
 }

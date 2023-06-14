@@ -101,9 +101,69 @@ public class UserController2 {
     }
 
 
+    /*用户查看地址信息*/
+    @RequestMapping("/showAddress")
+    public  String showAddress(Model model)
+    {
+
+        String user_id=(String)request.getSession().getAttribute("user_id");
+        List<Address>addressList=userService.showAddress(user_id);
+        Integer code=addressList!=null?Code.GET_OK:Code.GET_ERR;
+        String msg=addressList!=null?"":"该用户当前未添加地址!";
+        Result result=new Result(code,addressList,msg);
+        /*传入地址信息用于用户新增*/
+        List<Province>provinceList=userService.listAllProvince();
+        List<City>cityList=userService.listAllCity();
+        List<District>districtList=userService.listAllDistrict();
+        model.addAttribute("provinceList",provinceList);
+        model.addAttribute("cityList",cityList);
+        model.addAttribute("districtList",districtList);
+        model.addAttribute("user_id",user_id);
+        model.addAttribute("result",result);
+
+         /*前往用户地址管理页面*/
+        return "showAddress";
+    }
 
 
-/*用户查看订单*/
+/*用户地址信息修改*/
+    @RequestMapping("/alterAddress")
+    public  String  alterAddress(String district_id,String receipt_name,String receipt_tel,String detail_address,String receipt_email,String  address_id,Model model)
+    {
+        Integer rows= userService.alterAddress(district_id,receipt_name,receipt_tel,detail_address,receipt_email,address_id);
+        Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
+        String msg=rows!=0?"用户地址更新成功!":"地址更新失败,请重试!";
+        Result result=new Result(code,rows,msg);
+        /*修改后在原界面*/
+        return  "showAddress";
+
+    }
+
+
+
+    /*新增收货地址的user_id通过requst自动获取*/
+    @RequestMapping("/addAddress")
+    public  String  addAddress(Address address,Model model)
+
+    {
+
+        boolean flag=userService.addAddress(address);
+        Result result= new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag);
+        model.addAttribute("result",result);
+
+        /*新增地址后返回显示用户收货地址的界面*/
+        return " showAddress";
+
+    }
+
+
+
+
+
+
+
+
+    /*用户查看订单*/
     @RequestMapping("/searchOrders")
     public String  searchOrders(@RequestParam String user_id,Model model)
     {
@@ -159,6 +219,8 @@ public class UserController2 {
         orders.setUser_id(user_id);
         orders.setCreate_time(create_time);
         orders.setOrder_status("未支付");
+        orders.setReceipt_status("未收货");
+        orders.setShipment_status("未发货");
         orders.setOrder_totalprice(Itemprice);
         boolean flag=userService.addOrder(orders);
          String msg=flag!=false?"用户添加订单成功!":"添加订单失败";

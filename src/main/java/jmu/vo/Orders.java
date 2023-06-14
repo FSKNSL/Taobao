@@ -10,4 +10,6 @@ public class Orders {
     private  String  create_time;
     private   String  order_status;
     private   float order_totalprice;
+    private   String receipt_status;
+    private   String shipment_status;
 }
