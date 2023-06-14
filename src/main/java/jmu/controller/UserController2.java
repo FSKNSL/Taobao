@@ -32,13 +32,14 @@ public class UserController2 {
     {
         Userinfo userinfo=userService.login(user_id,user_pwd);
         Integer code=userinfo!=null?Code.LOGIN_OK:Code.LOGIN_ERR;
-        String msg=userinfo!=null?"买家登陆成功":"账户名或密码错误";
+        String msg=userinfo!=null?null:"账户名或密码错误";
         Result result=new Result(code,userinfo,msg);
         model.addAttribute("result",result);
         if(userinfo!=null) {
             /*设置session*/
             HttpSession session=request.getSession();
             session.setAttribute("user_id",user_id);
+            session.setAttribute("user_pwd",user_pwd);
             session.setAttribute("nickname",userinfo.getUser_nickname());
             /*返回买家登陆主界面*/
             return "douserLogin";
@@ -79,7 +80,7 @@ public class UserController2 {
         String msg=userinfo!=null?"":"用户信息获取失败!";
         Result result= new Result(code,userinfo,msg);
         model.addAttribute("result",result);
-        return "showUserInfo";
+        return "personCenter";
     }
 
     /*用户修改个人信息*/
@@ -90,11 +91,13 @@ public class UserController2 {
         Integer rows=userService.alterUserInfo(user_id,user_nickname,user_email,user_tel,user_pwd);
         Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
         String msg=rows!=0?"用户信息更新成功!":"用户更新失败,请重试!";
-       Result result= new Result(code,rows,msg);
-       model.addAttribute("result",result);
-
+        Userinfo userinfo = userService.showUserInfo(user_id);
+        Result result= new Result(code,userinfo,msg);
+        model.addAttribute("result",result);
+        HttpSession session=request.getSession();
+        session.setAttribute("user_pwd",userinfo.getUser_pwd());
        /*更新完成后本页面自动刷新*/
-       return "showUserInfo";
+       return "personCenter";
     }
 
 
@@ -234,7 +237,16 @@ public class UserController2 {
         /*可更改为模态框*/
         return  "searchOrders";
     }
-
+    @RequestMapping("/main")
+    public String main(Model model){
+        List<Orderitem> orderitemList=userService.listAllItems();
+        Integer code=orderitemList!=null?Code.GET_OK:Code.GET_ERR;
+        String msg=orderitemList!=null?"商品列表页如下":"未查询到商品信息,请刷新页面重试!";
+        Result  result= new Result(code,orderitemList,msg);
+        model.addAttribute("result2",result);
+        /*跳转到商品列表网页*/
+        return "main";
+    }
     /*展示所有商品界面*/
     @RequestMapping("/showAllItems")
     public  String showAllItems(Model model)
