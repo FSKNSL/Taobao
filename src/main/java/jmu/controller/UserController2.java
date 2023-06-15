@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.print.attribute.standard.PresentationDirection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -184,19 +185,10 @@ public class UserController2 {
         List<Orderdetail> orderdetailList=userService.searchOrderdetail(order_id);
 
         /*根据订单详情的商品id传递商品列表*/
-        List<Orderitem> OrderitemList = new ArrayList<>();
-        for (Orderdetail orderdetail : orderdetailList) {
-            String item_id = orderdetail.getItem_id();
-            Orderitem item = userService.searchItemByid(item_id);
-            if (item != null) {
-                OrderitemList.add(item);
-            }
-        }
         Integer code=orderdetailList!=null?Code.GET_OK:Code.GET_ERR;
         String msg=orderdetailList!=null?"":"该用户尚未购买商品!";
         Result result=new  Result(code,orderdetailList,msg);
         model.addAttribute("orderdetailList",orderdetailList);
-        model.addAttribute("orderitemList", OrderitemList);
         model.addAttribute("result",result);
         /*跳转至订单详情页面*/
         return  "searchOrderDetail";
@@ -204,12 +196,13 @@ public class UserController2 {
 
     /*跳转到商品详情页面*/
     @RequestMapping("showItemDetail")
-            public String showItemDetail(String item_id,Model model)
+    public String showItemDetail(@RequestParam String item_id,Model model)
     {
-
-
         Orderitem orderitem=userService.searchItemByid(item_id);
-        model.addAttribute("orderitem",orderitem);
+        Integer code=orderitem!=null?Code.GET_OK:Code.GET_ERR;
+        String msg=orderitem!=null?"":"该用户尚未购买商品!";
+        Result result=new  Result(code,orderitem,msg);
+        model.addAttribute("result",result);
         return "showItemDetail";
     }
 
@@ -221,9 +214,10 @@ public class UserController2 {
     public   String    addOrders(String item_id,int item_number,Model model)
     {
         Map<String,Object> itemprice=userService.getItemPrice(item_id);
-        float price=(float)itemprice.get("item_price");
-        float discount=(float)itemprice.get("item_discount");
-        float Itemprice=item_number*price*discount;
+        BigDecimal price=(BigDecimal)itemprice.get("item_price");
+        BigDecimal discount=(BigDecimal)itemprice.get("item_discount");
+        BigDecimal result = price.multiply(BigDecimal.valueOf(item_number));
+        BigDecimal Itemprice=discount.multiply(result);
         System.out.println("itemprice="+Itemprice);
         /*获取当前日志时间*/
         Date date=new Date();
@@ -249,7 +243,7 @@ public class UserController2 {
         boolean flag=userService.addOrder(orders);
          String msg=flag!=false?"用户添加订单成功!":"添加订单失败";
 
-        Result  result1= new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag);
+        Result  result1= new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag,msg);
 
         /*这里用户在商品界面勾选了响应的商品后可点击下单按钮,订单会根据用户的选择来生成相应的订单详情记录*/
 
@@ -263,12 +257,13 @@ public class UserController2 {
         orderdetail.setPay_price(Itemprice);
         orderdetail.setTotal_discount(discount);
         boolean flag2=userService.addOrderdetail(orderdetail);
-        Result result2=new Result(flag2?Code.INSERT_OK:Code.INSERT_ERR,flag2);
         String msg2=flag2!=false?"用户订单详情记录成功!":"订单详情记录失败";
-
+        Result result2=new Result(flag2?Code.INSERT_OK:Code.INSERT_ERR,flag2,msg2);
+        model.addAttribute("result1",result1);
+        model.addAttribute("result2",result2);
 
         /*返回到了下订单完成界面*/
-        return    "doaddOrders";
+        return "searchOrders";
 
 
     }
@@ -277,10 +272,12 @@ public class UserController2 {
     @RequestMapping("/payOrders")
     public String   payOrders(@RequestParam String order_id,Model model)
     {
+        String user_id = (String)request.getSession().getAttribute("user_id");
         int rows=userService.payOrders(order_id);
+        List<Orders> ordersList=userService.searchOrders(user_id);
         Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
         String msg=rows!=0?"用户支付成功!":"用户支付失败,请重试!";
-        Result result= new Result(code,rows,msg);
+        Result result= new Result(code,ordersList,msg);
         model.addAttribute("result",result);
 
         /*支付成功界面*/
@@ -366,17 +363,18 @@ public class UserController2 {
     /*点击商品加入购物车*/
     /*在商品列表页添加购物车,应该传入orderitem的一些信息*/
     @RequestMapping("/addShoppingCart")
-    public String   addShopping(String item_id,String item_name,String item_url,float item_price,float item_discount,Model model)
+    public String   addShopping(String item_id,Model model)
     {
         String user_id=(String)request.getSession().getAttribute("user_id");
         /*session自动获取user_id*/
+        Orderitem orderitem = userService.searchItemByid(item_id);
         Shoppingcart shoppingcart=new Shoppingcart();
         shoppingcart.setUser_id(user_id);
         shoppingcart.setItem_id(item_id);
-        shoppingcart.setItem_url(item_url);
-        shoppingcart.setItem_price(item_price*item_discount);
+        shoppingcart.setItem_url(orderitem.getItem_url());
+        shoppingcart.setItem_price(orderitem.getItem_price());
         /*打折后实际付款价格*/
-        shoppingcart.setItem_name(item_name);
+        shoppingcart.setItem_name(orderitem.getItem_name());
         shoppingcart.setItem_number(1);
         /*商品数量默认为1,进入购物车界面可通过点击修改*/
         boolean flag=userService.addShoppingCart(shoppingcart);

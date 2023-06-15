@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>登录页面</title>
+    <link rel="icon" th:href="@{/image/huawei.jpg}" href="/image/huawei.jpg"/>
+    <link rel="stylesheet" th:href="@{/bootstrap-5.2.3-dist/css/bootstrap.min.css}" href="/bootstrap-5.2.3-dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" th:href="@{https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css}"/>
+    <link rel="stylesheet"  href="/css/ycc.css" th:href="@{/css/ycc.css}">
+    <script src="/js/jquery-3.6.0-min.js"></script>
+    <script src="/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            margin:0;
+            padding:0;
+        }
+        li{
+            list-style: none;
+        }
+        .number-box {
+            border:#e5e5e5 solid 1px;
+            display:inline-block;
+            overflow:hidden;
+        }
+        .number-box input[type='text'] {
+            height:30px;
+            border-top:none;
+            border-bottom:none;
+            border-left:#e5e5e5 solid 1px;
+            border-right:#e5e5e5 solid 1px;
+            margin:0;
+            text-align:center;
+            width:40px;
+            outline:none;
+            padding:0 5px;
+            float:left;
+            line-height:30px;
+        }
+        .number-box input[type='button'] {
+            height:30px;
+            width:40px;
+            float:left;
+            border:none;
+            outline:none;
+            background-color:#f3f3f3;
+            line-height:30px;
+            cursor:pointer;
+            padding:0;
+        }
+        .number-box input[type='button']:hover {
+            background-color:#f9f9f9;
+        }
+        .number-box input[type='button']:active {
+            background-color:#f6f6f6;
+        }
+    </style>
+    <script th:inline="javascript">
+        function check(){
+            var num = $('#number').val();
+            var price = [[${result.data.item_price}]];
+            var discount = [[${result.data.item_discount}]];
+            var total = price*discount*num;
+            $("#num").attr("value",num);
+            $("#total").html(total.toFixed(2));
+            $("#checkOrder").click();
+        }
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-dark bg-warning navbar-expand-lg">
+    <div class="container-fluid text-white">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <h5 class="" style="color: orangered"><i class="bi bi-cart4"></i>淘宝</h5>
+            <ul class="navbar-nav me-lg-2 mb-0 mb-lg-1">
+                <li class="nav-item">
+                    <a class="nav-link active" th:href="@{/User2/login(user_id=${session.user_id},user_pwd=${session.user_pwd})}" style="color: #2c3034"><i class="bi bi-house"></i>首页</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" style="color: #2c3034"><i class="bi bi-cart-check"></i>商品详情</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav" style="margin-left: auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/loginOut" style="color: #2c3034">
+                        <i class="bi bi-backspace-reverse"></i>
+                        退出登陆
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="row" style="padding-inline: 0">
+    <div class="col-md-3 offset-md-2">
+        <div class="card bg-dark text-white shadow">
+            <img th:src="${result.data.item_url}" class="card-img index-img" alt="" height="100%" width="100%" id="previewimg">
+        </div>
+    </div>
+    <div class="col-md-4 order-md-1 offset-1">
+        <h1 class="display-5 mt-3"><i class="bi bi-hand-thumbs-up"></i>商品详情</h1>
+        <dl class="row g-3">
+            <dt class="col-md-3">商品名称</dt>
+            <dd class="col-md-9"><h4 th:text="${result.data.item_name}"></h4></dd>
+
+            <dt class="col-md-3">商品价格</dt>
+            <dd class="col-md-9">
+                <h2 th:text="${result.data.item_price}" style="color: orangered"></h2>
+                限时折扣：<strong th:text="${result.data.item_discount}*100+'%'" style="color: red"></strong>
+            </dd>
+
+            <dt class="col-md-3">商品介绍</dt>
+            <dd class="col-md-9"><p th:text="${result.data.item_profile}"></p></dd>
+        </dl>
+        <div class="row g-3">
+            <div class="col-md-10">
+                <div class="number-box">
+                    <input type="button" class="on-number" value="-" data-v="-1">
+                    <label for="number"></label><input class="form-control" id="number" type="text" value="0">
+                    <input type="button" class="on-number" value="+" data-v="1">
+                </div>
+            </div>
+            <h5 class="text-center mt-2"><i class="bi bi-magic"></i>购买</h5>
+            <div class="col-md-3">
+                <a th:href="@{/User2//addShoppingCart}" type="button" class="btn btn-outline-dark">加入购物车</a>
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-warning" onclick="check()">立即下单</button>
+            </div>
+        </div>
+    </div>
+</div>
+<button id="checkOrder" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#insertOrder" hidden="hidden"></button>
+<form th:action="@{/User2/addOrder}" th:method="post" th:class="form-horizontal" role="form" id="insertForm">
+    <div class="modal fade" id="insertOrder"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <!--  定义模态框，过渡效果为淡入，id为myModal,tabindex=-1可以禁用使用tab切换，aria-labelledby用于引用模态框的标题，aria-hidden=true保持模态框在触发前窗口不可见  -->
+        <div class="modal-dialog">
+            <!--  显示模态框对话框模型（若不写下一个div则没有颜色）  -->
+            <div class="modal-content">
+                <!--  显示模态框白色背景，所有内容都写在这个div里面  -->
+
+                <div class="btn-info modal-header">
+                    <!--  模态框标题  -->
+                    <button type="button" class="close btn" data-bs-dismiss="modal">&times;</button>
+                    <!--  关闭按钮  -->
+                    <h4>确认信息</h4>
+                    <!--  标题内容  -->
+                </div>
+
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-3 offset-md-2">
+                                <div class="card bg-dark text-white shadow">
+                                    <img th:src="${result.data.item_url}" class="card-img index-img" alt="" height="100%" width="100%">
+                                </div>
+                            </div>
+                            <!--  模态框内容，我在此处添加一个表单 -->
+                            <div class="col-md-4 order-md-1 offset-1">
+                                <h1 class="display-5 mt-3"><i class="bi bi-hand-thumbs-up"></i>商品详情</h1>
+                                <dl class="row g-3">
+                                    <dt class="col-md-3">商品名称</dt>
+                                    <dd class="col-md-9"><p th:text="${result.data.item_name}"></p></dd>
+
+                                    <dt class="col-md-3">商品单价</dt>
+                                    <dd class="col-md-9">
+                                        <p th:text="${result.data.item_price}" style="color: orangered"></p>
+                                        限时折扣：<strong th:text="${result.data.item_discount}" style="color: red"></strong>
+                                    </dd>
+                                    <dt class="col-md-3">商品介绍</dt>
+                                    <dd class="col-md-9"><p th:text="${result.data.item_profile}"></p></dd>
+                                </dl>
+                                <form class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="num">购买数量</label><input id="num" name="item_number" class="form-control" value="" readonly="readonly">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input class="form-control" name="user_id" th:value="${session.user_id}" hidden="hidden">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <!--  模态框底部样式，一般是提交或者确定按钮 -->
+                    商品总价：<strong id="total" style="color: orangered"></strong>
+                    <button type="submit" class="btn btn-info">确定</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">取消</button>
+                </div>
+
+            </div><!-- /.modal-content -->
+        </div>
+    </div> <!-- /.modal -->
+</form>
+<script>
+    $(document.documentElement).on("click", ".on-number", function() {
+        var $val = $(this).siblings("input[type='text']"),
+            val = parseInt($val.val(), 10) + parseInt($(this).data("v"));
+        $val.val(isNaN(val) ? 0 : val);
+    });
+</script>
+</body>
+</html>

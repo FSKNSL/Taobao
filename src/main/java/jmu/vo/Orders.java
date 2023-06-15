@@ -2,6 +2,8 @@ package jmu.vo;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class Orders {
     private    String order_id;
@@ -9,7 +11,7 @@ public class Orders {
     private  String waybill_id;
     private  String  create_time;
     private   String  order_status;
-    private   double order_totalprice;
+    private BigDecimal order_totalprice;
     private   String receipt_status;
     private   String shipment_status;
 }
