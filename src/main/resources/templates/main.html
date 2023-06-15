@@ -48,10 +48,13 @@
                 <img th:src="${item.item_url}" class="card-img-top" alt="..." style="height: 300px">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${item.item_price}" style="color: orangered"></h5>
-                    <p class="card-text small" th:text="${item.item_profile}"></p>
+                    <small class="text-muted" th:text="${item.item_name}"></small>
+                    <p class="card-text" th:text="${item.item_profile}"></p>
                 </div>
                 <div class="card-footer">
-                    <small class="text-muted" th:text="${item.item_name}"></small>
+                    <div>
+                        <a class="btn btn-primary stretched-link">查看详情</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -65,10 +68,13 @@
                 <img th:src="${item.item_url}" class="card-img-top" alt="..." style="height: 300px">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${item.item_price}" style="color: orangered"></h5>
-                    <p class="card-text small" th:text="${item.item_profile}"></p>
+                    <small class="text-muted" th:text="${item.item_name}"></small>
+                    <p class="card-text" th:text="${item.item_profile}"></p>
                 </div>
                 <div class="card-footer">
-                    <small class="text-muted" th:text="${item.item_name}"></small>
+                    <div>
+                        <a class="btn btn-primary stretched-link">查看详情</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -82,10 +88,11 @@
                 <img th:src="${item.item_url}" class="card-img-top" alt="..." style="height: 300px">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${item.item_price}" style="color: orangered"></h5>
-                    <p class="card-text small" th:text="${item.item_profile}"></p>
+                    <small class="text-muted" th:text="${item.item_name}"></small>
+                    <p class="card-text" th:text="${item.item_profile}"></p>
                 </div>
                 <div class="card-footer">
-                    <small class="text-muted" th:text="${item.item_name}"></small>
+                    <a class="btn btn-primary stretched-link">查看详情</a>
                 </div>
             </div>
         </div>
