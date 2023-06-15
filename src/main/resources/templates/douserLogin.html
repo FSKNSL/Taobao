@@ -50,8 +50,8 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/User2/searchOrders}+'?user_id='+${session.user_id}" style="color: #2c3034">
-                        <i class="bi bi-person-fill"></i>
+                    <a class="nav-link" th:href="@{/User2/listAllCart}+'?user_id='+${session.user_id}" style="color: #2c3034">
+                        <i class="bi bi-cart-check"></i>
                         购物车
                     </a>
                 </li>
@@ -72,7 +72,7 @@
     </div>
 </nav>
 <div class="container">
-    <div style="height: 2300px">
+    <div style="height: 2400px">
         <iframe th:src="@{/User2/main}" width="100%" height="100%" name="iframe_a" frameborder="0" scrolling="no"></iframe>
     </div>
 </div>

@@ -23,7 +23,7 @@
                     <a class="nav-link active" th:href="@{/User2/login(user_id=${session.user_id},user_pwd=${session.user_pwd})}" style="color: #2c3034"><i class="bi bi-house"></i>首页</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/User2/}" style="color: #2aabd2"><i class="bi bi-person-fill"></i>个人中心</a>
+                    <a class="nav-link" th:href="@{/User2/showUserInfo}" style="color: #2aabd2"><i class="bi bi-person-fill"></i>个人中心</a>
                 </li>
             </ul>
             <ul class="navbar-nav" style="margin-left: auto">
@@ -37,5 +37,80 @@
         </div>
     </div>
 </nav>
+<br/>
+<div class="container">
+    <div class="row">
+        <div class="col-md-10 offset-md-1">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" role="presentation" >
+                    <button class="nav-link" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="false">全部</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="unpaid-tab" data-bs-toggle="tab" data-bs-target="#unpaid-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="true">未支付</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="paid-tab" data-bs-toggle="tab" data-bs-target="#paid-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">已支付</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="unReceive-tab" data-bs-toggle="tab" data-bs-target="#unReceive-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" >未收货</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="received-tab" data-bs-toggle="tab" data-bs-target="#received-tab-pane" type="button" role="tab" aria-controls="disabled-tab-pane" aria-selected="false" >已收货</button>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-10 offset-md-1">
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
+                    <table class="table align-middle">
+                        <thead>
+                        <tr>
+                            <th scope="col">订单id</th>
+                            <th scope="col">运单号</th>
+                            <th scope="col">单价</th>
+                            <th scope="col">库存</th>
+                            <th scope="col">购买数量</th>
+                            <th scope="col">创建时间</th>
+                            <th scope="col">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-group-divider" th:each="order,iterStat:${result.data}">
+                        <tr>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade show active" id="unpaid-tab-pane" role="tabpanel" aria-labelledby="unpaid-tab" tabindex="0">
+                    <table class="table align-middle">
+                        <thead>
+                        <tr>
+                            <th scope="col">订单id</th>
+                            <th scope="col">运单号</th>
+                            <th scope="col">总价</th>
+                            <th scope="col">创建时间</th>
+                            <th scope="col">订单详情</th>
+                            <th scope="col">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody class="table-group-divider" th:each="order,iterStat:${result.data}" th:if="${order.order_status}eq'未支付'">
+                        <tr>
+                            <td th:text="${order.order_id}"></td>
+                            <td th:text="${order.waybill_id}"></td>
+                            <td th:text="${order.order_totalprice}"></td>
+                            <td th:text="${order.create_time}"></td>
+                            <td ><a th:href="@{/User2/searchOrderDetail}+'?order_id='+${order.order_id}"><button class="btn btn-outline-warning">查看订单详情</button></a></td>
+                            <td ><a th:href="@{/User2/payOrders}+'?order_id='+${order.order_id}"><button class="btn btn-warning">去支付</button></a></td>
+                            <td ><a ><button class="btn btn-danger">取消订单</button></a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="paid-tab-pane" role="tabpanel" aria-labelledby="paid-tab" tabindex="0">...</div>
+                <div class="tab-pane fade" id="unReceive-tab-pane" role="tabpanel" aria-labelledby="unReceive-tab" tabindex="0">...</div>
+                <div class="tab-pane fade" id="received-tab-pane" role="tabpanel" aria-labelledby="unReceive-tab" tabindex="0">...</div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

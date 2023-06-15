@@ -145,11 +145,14 @@ public class UserController2 {
     {
 
         boolean flag=userService.addAddress(address);
-        Result result= new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag);
+        String user_id=(String)request.getSession().getAttribute("user_id");
+        List<Address>addressList=userService.showAddress(user_id);
+        String msg = flag==true ?"添加成功":"添加失败";
+        Result result= new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,addressList,msg);
         model.addAttribute("result",result);
 
         /*新增地址后返回显示用户收货地址的界面*/
-        return " showAddress";
+        return "showAddress";
 
     }
 
@@ -175,7 +178,7 @@ public class UserController2 {
     }
 
     /*用户查看订单详情*/
-    @RequestMapping("/searchOrderdetail")
+    @RequestMapping("/searchOrderDetail")
     public  String  searchOrderdetail(@RequestParam String order_id,Model model)
     {
         List<Orderdetail> orderdetailList=userService.searchOrderdetail(order_id);
@@ -196,7 +199,7 @@ public class UserController2 {
         model.addAttribute("orderitemList", OrderitemList);
         model.addAttribute("result",result);
         /*跳转至订单详情页面*/
-        return  "searchOrderdetail";
+        return  "searchOrderDetail";
     }
 
     /*跳转到商品详情页面*/
@@ -270,7 +273,7 @@ public class UserController2 {
 
     /*用户支付订单*/
     @RequestMapping("/payOrders")
-    public String   payOrders(String order_id,Model model)
+    public String   payOrders(@RequestParam String order_id,Model model)
     {
         int rows=userService.payOrders(order_id);
         Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
@@ -279,7 +282,7 @@ public class UserController2 {
         model.addAttribute("result",result);
 
         /*支付成功界面*/
-        return "dopayOrders";
+        return "searchOrders";
 
     }
 
@@ -345,7 +348,7 @@ public class UserController2 {
     /*用户查看购物车*/
 
     @RequestMapping("/listAllCart")
-    public String   listAllCart(String user_id,Model model)
+    public String   listAllCart(@RequestParam String user_id,Model model)
     {
         List<Shoppingcart>shoppingcartList=userService.listAllCart(user_id);
         Integer code=shoppingcartList!=null?Code.GET_OK:Code.GET_ERR;
@@ -353,7 +356,7 @@ public class UserController2 {
         Result result=  new Result(code,shoppingcartList,msg);
         model.addAttribute("result",result);
         /*跳转至购物车界面,在此界面能够结算或返回商品页面继续浏览*/
-        return "showShoppingCart";
+        return "shoppingCart";
     }
 
 
@@ -375,7 +378,8 @@ public class UserController2 {
         shoppingcart.setItem_number(1);
         /*商品数量默认为1,进入购物车界面可通过点击修改*/
         boolean flag=userService.addShoppingCart(shoppingcart);
-        Result result= new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag);
+        String msg = flag!=false ?"加入成功":"加入失败";
+        Result result= new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag,msg);
         model.addAttribute("result",result);
 
         /*这里的返回页面前端可自定义,可选择去购物车结算还是继续购物*/

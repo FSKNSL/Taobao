@@ -115,7 +115,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <a href="login.html">
+            <a th:href="@{/User2/listAllCart}+'?user_id='+${session.user_id}">
                 <button type="button" class="btn btn-warning position-relative w-100 fst-italic shadow">
                     <i class="bi bi-cart4"></i>
                     购物车
@@ -128,7 +128,7 @@
         </div>
 
         <div class="col-md-4">
-            <a href="login.html">
+            <a th:href="@{/User2/showAddress}">
                 <button type="button" class="btn btn-info position-relative w-100 fst-italic shadow">
                     <i class="bi bi-person-circle"></i>
                     收货地址
