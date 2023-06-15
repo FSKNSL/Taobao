@@ -1,0 +1,92 @@
+.page_shop_cart .shop_cart_num {
+    color: #5271ff;
+    font-size: 1.125rem;
+    margin: 1.25rem 0;
+}
+.page_shop_cart .shop_cart_num span {
+    padding: 0.3125rem;
+    border-bottom: 2px solid #5271ff;
+}
+.page_shop_cart .shop_cart .cart_part_title {
+    padding: 1.25rem 0;
+}
+.page_shop_cart .shop_cart .cart_part_title img {
+    width: 12.5rem;
+}
+.page_shop_cart .shop_cart .cart_table_head {
+    background-color: rgba(238, 238, 238, 0.247);
+    color: #666;
+    font-size: 14px;
+}
+.page_shop_cart .shop_cart .cart_table_head tr th {
+    border-bottom: unset;
+}
+.page_shop_cart .shop_cart .cart_table_body tr .img_box img {
+    width: 4.375rem;
+    height: 4.375rem;
+}
+.page_shop_cart .shop_cart .cart_table_body tr .img_box span {
+    margin-top: 0.625rem;
+    display: block;
+    color: #666;
+    font-size: 0.875rem;
+    height: 1.75rem;
+    width: 9.375rem;
+    line-height: 1.375rem;
+    padding: 0 0.625rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+.page_shop_cart .shop_cart .cart_table_body tr .money {
+    color: red;
+}
+.page_shop_cart .shop_cart .cart_table_body tr td {
+    vertical-align: inherit;
+    color: #666;
+    font-size: 14px;
+}
+.page_shop_cart .pay_box {
+    background-color: #fff4e8;
+    margin: 1.875rem 0;
+}
+.page_shop_cart .pay_box .right_check {
+    margin-left: 0.9375rem;
+}
+.page_shop_cart .pay_box .right_check input {
+    cursor: pointer;
+}
+.page_shop_cart .pay_box .right_check span {
+    margin-left: 0.625rem;
+    font-size: 0.875rem;
+    color: #333;
+}
+.page_shop_cart .pay_box .pay_right .right_num {
+    color: #666;
+    font-size: 0.875rem;
+    margin-right: 0.625rem;
+    margin-top: 0.325rem;
+}
+.page_shop_cart .pay_box .pay_right .right_num .check_num {
+    color: red;
+    font-weight: bold;
+}
+.page_shop_cart .pay_box .pay_right .right_price {
+    color: #999;
+    font-size: 0.875rem;
+    margin-right: 1.25rem;
+}
+.page_shop_cart .pay_box .pay_right .right_price .total_price {
+    font-size: 1.25rem;
+    color: red;
+    font-weight: bold;
+}
+.page_shop_cart .pay_box .pay_right .pay_btn {
+    background-color: #5271ff;
+    color: #fff;
+    padding: 0.9375rem 1.875rem;
+    font-size: 1.125rem;
+    cursor: pointer;
+}
+
