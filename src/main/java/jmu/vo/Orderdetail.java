@@ -9,7 +9,7 @@ public class Orderdetail {
     private  String item_id;
     private  String order_id;
     private   int item_number;
-    private    float pay_price;
-    private    float total_discount;
+    private    double  pay_price;
+    private    double total_discount;
 
 }

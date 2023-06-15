@@ -10,7 +10,7 @@ public class Orderitem {
     private   String  item_name;
     private    String    item_url;
     private   String   item_profile;
-    private   float   item_price;
-    private   float  item_discount;
+    private   double   item_price;
+    private   double  item_discount;
     private    int  inventory;
 }

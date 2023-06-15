@@ -135,6 +135,10 @@ public class BusinessController2 {
         model.addAttribute("waybill_id",waybill_id);
 
 
+        /*修改订单状态*/
+
+
+
         /*这里跳转到发货的表单或模态框中，传递必要的参数生成运单信息*/
         return "showbusinessByBusiness_id";
 

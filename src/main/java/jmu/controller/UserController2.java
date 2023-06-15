@@ -207,7 +207,9 @@ public class UserController2 {
             public String showItemDetail(String item_id,Model model)
     {
 
-        model.addAttribute("item_id",item_id);
+
+        Orderitem orderitem=userService.searchItemByid(item_id);
+        model.addAttribute("orderitem",orderitem);
         return "showItemDetail";
     }
 
