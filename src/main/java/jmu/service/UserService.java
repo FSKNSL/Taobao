@@ -42,6 +42,8 @@ public interface UserService {
 
     public  List<Orderdetail>searchOrderdetail(String order_id);/*查看订单详情*/
 
+    public Orderitem searchItemByid(String item_id);/*根据详情的商品id查看商品信息*/
+
     public    boolean addOrder(Orders orders);/*用户添加订单*/
     public Map<String,Object> getItemPrice(@Param("item_id") String item_id);/*按照商品id返回商品价格*/
 

@@ -14,10 +14,7 @@ import javax.print.attribute.standard.PresentationDirection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Controller
 @RequestMapping("/User2")
@@ -182,16 +179,38 @@ public class UserController2 {
     public  String  searchOrderdetail(@RequestParam String order_id,Model model)
     {
         List<Orderdetail> orderdetailList=userService.searchOrderdetail(order_id);
+
+        /*根据订单详情的商品id传递商品列表*/
+        List<Orderitem> OrderitemList = new ArrayList<>();
+        for (Orderdetail orderdetail : orderdetailList) {
+            String item_id = orderdetail.getItem_id();
+            Orderitem item = userService.searchItemByid(item_id);
+            if (item != null) {
+                OrderitemList.add(item);
+            }
+        }
         Integer code=orderdetailList!=null?Code.GET_OK:Code.GET_ERR;
         String msg=orderdetailList!=null?"":"该用户尚未购买商品!";
         Result result=new  Result(code,orderdetailList,msg);
         model.addAttribute("orderdetailList",orderdetailList);
+        model.addAttribute("orderitemList", OrderitemList);
         model.addAttribute("result",result);
         /*跳转至订单详情页面*/
         return  "searchOrderdetail";
     }
 
+    /*跳转到商品详情页面*/
+    @RequestMapping("showItemDetail")
+            public String showItemDetail(String item_id,Model model)
+    {
 
+        model.addAttribute("item_id",item_id);
+        return "showItemDetail";
+    }
+
+
+
+/*详情页面添加订单或添加购物车*/
     @RequestMapping("/addOrder")
     /*前端页面勾选商品,传递相应的商品id*/
     public   String    addOrders(String item_id,int item_number,Model model)
@@ -337,6 +356,8 @@ public class UserController2 {
         return "showShoppingCart";
     }
 
+
+    /*在商品详情页面*/
     /*点击商品加入购物车*/
     /*在商品列表页添加购物车,应该传入orderitem的一些信息*/
     @RequestMapping("/addShoppingCart")

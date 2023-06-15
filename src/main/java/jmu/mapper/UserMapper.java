@@ -64,6 +64,11 @@ public interface UserMapper {
     @Select("select * from orderdetail where  order_id=#{order_id}")
     public  List<Orderdetail>  searchOrderdetail(String order_id);
 
+/*根据订单详情的商品id显示所有商品*/
+    @Select("select * from orderitem where item_id=#{item_id}")
+    public Orderitem searchItemByid(String item_id);
+
+
     /*买家生成订单*/
     /*步骤 :  1.勾选商品  2.点击确认生成订单  3.可以旺订单中添加商品*/
     /*订单其他信息在用户支付后商家下单后才更新*/
