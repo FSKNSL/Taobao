@@ -6,11 +6,10 @@ import jmu.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 
-import javax.print.attribute.standard.PresentationDirection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
@@ -241,7 +240,7 @@ public class UserController2 {
         orders.setShipment_status("未发货");
         orders.setOrder_totalprice(Itemprice);
         boolean flag=userService.addOrder(orders);
-         String msg=flag!=false?"用户添加订单成功!":"添加订单失败";
+        String msg=flag!=false?"用户添加订单成功!":"添加订单失败";
 
         Result  result1= new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag,msg);
 
@@ -277,6 +276,28 @@ public class UserController2 {
         List<Orders> ordersList=userService.searchOrders(user_id);
         Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
         String msg=rows!=0?"用户支付成功!":"用户支付失败,请重试!";
+        /*用户支付后会产生一条支付记录*/
+        /*往pay中插入一条信息*/
+        /*获取当前日志时间*/
+        Date date=new Date();
+        SimpleDateFormat dateFormat=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        String  create_time=dateFormat.format(date);
+        Pay pay=new Pay();
+        pay.setOrder_id(order_id);
+        pay.setUser_id(user_id);
+        pay.setPay_date(create_time);
+        /*生成随机的十位数字符单编号*/
+        Random random = new Random();
+        int randomNum = 0;
+        int min = 100000000; // 最小值为100000000
+        int max = 999999999; // 最大值为999999999
+        randomNum = random.nextInt(max - min + 1) + min; // 生成随机数
+        String[] payments = {"微信支付", "支付宝支付", "银联支付"}; // 支付方式数组
+        Random random2 = new Random();
+        int index = random2.nextInt(payments.length); // 生成一个随机下标
+        String payment = payments[index]; // 根据下标获取对应的支付方式
+       pay.setPay_method(payment);
+        pay.setPay_number(String.valueOf(randomNum));
         Result result= new Result(code,ordersList,msg);
         model.addAttribute("result",result);
 
@@ -347,14 +368,16 @@ public class UserController2 {
     /*用户查看购物车*/
 
     @RequestMapping("/listAllCart")
-    public String   listAllCart(@RequestParam String user_id,Model model)
+    public String   listAllCart(Model model)
     {
+        String user_id=(String)request.getSession().getAttribute("user_id");
         List<Shoppingcart>shoppingcartList=userService.listAllCart(user_id);
         Integer code=shoppingcartList!=null?Code.GET_OK:Code.GET_ERR;
         String msg=shoppingcartList!=null?"购物车信息如下":"购物车空空如也,byd还不快来买";
         Result result=  new Result(code,shoppingcartList,msg);
         model.addAttribute("result",result);
         /*跳转至购物车界面,在此界面能够结算或返回商品页面继续浏览*/
+
         return "shoppingCart";
     }
 
@@ -389,18 +412,18 @@ public class UserController2 {
 
 
     /*在购物车界面的修改操作*/
-    /*主要是对商品数量的修改,和价格的修改*/
+    /*主要是对商品数量的的修改*/
 
     @RequestMapping("/alterShoppingCart")
-    public String alterShoppingCart(int item_number,float item_price,int cart_id,Model model)
+    public ModelAndView alterShoppingCart(int item_number, int cart_id, Model model)
     {
-        float  alter_price=item_number*item_price;
-        Integer rows=userService.alterShoppingCart(item_number,alter_price,cart_id);
+        Integer rows=userService.alterShoppingCart(item_number,cart_id);
         Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
         String msg=rows!=0?"购物车信息更新成功":"购物车信息更新失败,请重试!";
         Result result = new Result(code,rows,msg);
+        model.addAttribute("result",result);
         /*修改完成后依然在购物车界面,提示信息?*/
-        return  "showShoppingCart";
+        return new ModelAndView("redirect:/listAllCart");
     }
 
     /*按照传入的cart_id删除一条购物车记录*/
@@ -414,6 +437,34 @@ public class UserController2 {
         /*删除完成后依然在购物车界面,提示信息?*/
         return "shopShoppingcart";
     }
+
+
+    /*用户查看自己的支付记录*/
+    @RequestMapping("/listAllPay")
+    public String listAllPay(Model model)
+    {
+        String user_id=(String)request.getSession().getAttribute("user_id");
+        List<Pay>payList=userService.listAllPay(user_id);
+        Integer code=payList!=null?Code.GET_OK:Code.GET_ERR;
+        String msg=payList!=null?"":"该用户尚未有任何支付记录!";
+        Result result=new Result(code,payList,msg);
+        model.addAttribute("result",result);
+
+        /*返回的页面自定义*/
+        return  "";
+    }
+
+
+
+
+
+
+    /*对购物车商品批量下单*/
+    /*生成一个订单操作,并且一个订单对应响应数量的订单详情*/
+
+
+
+
 
 
 

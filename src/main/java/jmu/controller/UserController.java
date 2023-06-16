@@ -6,6 +6,7 @@ import jmu.service.UserService;
 import jmu.vo.*;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -183,9 +184,26 @@ public class UserController {
        int rows=userService.payOrders(order_id);
         Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
         String msg=rows!=0?"用户支付成功!":"用户支付失败,请重试!";
+
+
         return new Result(code,rows,msg);
 
     }
+
+    @RequestMapping("/listAllPay")
+    public Result listAllPay(String user_id,Model model)
+    {
+
+        List<Pay>payList=userService.listAllPay(user_id);
+        Integer code=payList!=null?Code.GET_OK:Code.GET_ERR;
+        String msg=payList!=null?"":"该用户尚未有任何支付记录!";
+        return new  Result(code,payList,msg);
+
+    }
+
+
+
+
 
     /*用户对订单评价*/
     @RequestMapping("/doappraiseOrders")
@@ -246,10 +264,9 @@ public class UserController {
     /*主要是对商品数量的修改,和价格的修改*/
 
     @RequestMapping("/alterShoppingCart")
-    public Result alterShoppingCart(int item_number,float item_price,int cart_id)
+    public Result alterShoppingCart(int item_number,int cart_id)
     {
-        float  alter_price=item_number*item_price;
-        Integer rows=userService.alterShoppingCart(item_number,alter_price,cart_id);
+        Integer rows=userService.alterShoppingCart(item_number,cart_id);
         Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
         String msg=rows!=0?"购物车信息更新成功":"购物车信息更新失败,请重试!";
         return new Result(code,rows,msg);

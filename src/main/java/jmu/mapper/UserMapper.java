@@ -99,6 +99,11 @@ public interface UserMapper {
     @Update("update  orders set order_status='已支付' where order_id=#{order_id}")
     public   int  payOrders(String orders_id);
 
+
+    /*用户字符订单后生成的支付记录,随着支付而生成，不可撤销*/
+    @Insert("insert into pay values(#{order_id},#{user_id},#{pay_date},#{pay_method},#{pay_number})")
+            public boolean  payOrders2(Pay pay);
+
     /*买家对订单进行评价*/
     @Insert("insert  into appraise values(#{user_id},#{order_id},#{appraise_time},#{appraise_grade},#{appraise_content}) ")
     public  boolean appraiseOrders(Appraise appraise);
@@ -121,14 +126,18 @@ public interface UserMapper {
 
 
     /*按照cart_id修改购物车商品数量和价格,价格随数量同时改动*/
-    @Update("update shoppingcart  set  item_number=#{item_number},item_price=#{item_price} where cart_id=#{cart_id}")
-    public  int  alterShoppingCart(int item_number,float item_price,int cart_id);
+    @Update("update shoppingcart  set  item_number=#{item_number} where cart_id=#{cart_id}")
+    public  int  alterShoppingCart(int item_number,int cart_id);
 
 
     /*按照cart_id删除购物车记录*/
     @Delete("delete   from shoppingcart where cart_id=#{cart_id}")
     public int deleteShoppingcart(int cart_id);
 
+
+    /*用户查看自己的支付记录*/
+    @Select("select * from  pay where user_id=#{user_id}")
+    public   List<Pay> listAllPay(String user_id);
 
 
 

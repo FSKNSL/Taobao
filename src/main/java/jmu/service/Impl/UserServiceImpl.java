@@ -109,6 +109,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean payOrders2(Pay pay) {
+        userMapper.payOrders2(pay);
+        return true;
+    }
+
+    @Override
     public boolean appraiseOrders(Appraise appraise) {
         userMapper.appraiseOrders(appraise);
         return true;
@@ -131,12 +137,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int alterShoppingCart(int item_number, float item_price, int cart_id) {
-        return userMapper.alterShoppingCart(item_number,item_price,cart_id);
+    public int alterShoppingCart(int item_number,  int cart_id) {
+        return userMapper.alterShoppingCart(item_number,cart_id);
     }
 
     @Override
     public int deleteShoppingcart(int cart_id) {
         return userMapper.deleteShoppingcart(cart_id);
+    }
+
+    @Override
+    public List<Pay> listAllPay(String user_id) {
+        return userMapper.listAllPay(user_id);
     }
 }
