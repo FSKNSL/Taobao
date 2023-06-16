@@ -52,6 +52,8 @@ public interface UserService {
 
     public   int  payOrders(String orders_id);/*用户支付*/
 
+    public boolean  payOrders2(Pay pay);/*支付后的订单记录,自动生成*/
+
     public  boolean appraiseOrders(Appraise appraise);/*用户对订单评价*/
 
     public  List<Orderitem>listAllItems();/*展示所有商品信息*/
@@ -60,8 +62,10 @@ public interface UserService {
 
     public boolean addShoppingCart(Shoppingcart shoppingcart);/*点击商品添加购物车*/
 
-    public  int  alterShoppingCart(int item_number,float item_price,int cart_id);/*修改购物车商品数量*/
+    public  int  alterShoppingCart(int item_number,int cart_id);/*修改购物车商品数量*/
 
     public int deleteShoppingcart(int cart_id);/*删除一条购物车记录*/
+
+    public   List<Pay> listAllPay(String user_id);/*用户查看自己的支付记录*/
 
 }
