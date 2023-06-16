@@ -6,10 +6,11 @@ import jmu.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
+import javax.print.attribute.standard.PresentationDirection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
@@ -377,7 +378,6 @@ public class UserController2 {
         Result result=  new Result(code,shoppingcartList,msg);
         model.addAttribute("result",result);
         /*跳转至购物车界面,在此界面能够结算或返回商品页面继续浏览*/
-
         return "shoppingCart";
     }
 
@@ -415,7 +415,7 @@ public class UserController2 {
     /*主要是对商品数量的的修改*/
 
     @RequestMapping("/alterShoppingCart")
-    public ModelAndView alterShoppingCart(int item_number, int cart_id, Model model)
+    public String alterShoppingCart(int item_number,int cart_id,Model model)
     {
         Integer rows=userService.alterShoppingCart(item_number,cart_id);
         Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
@@ -423,7 +423,7 @@ public class UserController2 {
         Result result = new Result(code,rows,msg);
         model.addAttribute("result",result);
         /*修改完成后依然在购物车界面,提示信息?*/
-        return new ModelAndView("redirect:/listAllCart");
+        return  "redirct:/listAllCart";
     }
 
     /*按照传入的cart_id删除一条购物车记录*/
