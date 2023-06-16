@@ -2,6 +2,8 @@ package jmu.vo;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 public class Orderitem {
     private  String    item_id;
@@ -10,7 +12,7 @@ public class Orderitem {
     private   String  item_name;
     private    String    item_url;
     private   String   item_profile;
-    private   double   item_price;
-    private   double  item_discount;
+    private BigDecimal item_price;
+    private   BigDecimal  item_discount;
     private    int  inventory;
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -133,9 +134,10 @@ public class UserController {
             public Result   addOrders(String item_id,int item_number)
     {
         Map<String,Object> itemprice=userService.getItemPrice(item_id);
-        float price=(float)itemprice.get("item_price");
-        float discount=(float)itemprice.get("item_discount");
-       float Itemprice=item_number*price*discount;
+        BigDecimal price=(BigDecimal)itemprice.get("item_price");
+        BigDecimal discount=(BigDecimal)itemprice.get("item_discount");
+        BigDecimal result = price.multiply(BigDecimal.valueOf(item_number));
+        BigDecimal Itemprice = discount.multiply(result);
         /*获取当前日志时间*/
         Date date=new Date();
         SimpleDateFormat dateFormat=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");

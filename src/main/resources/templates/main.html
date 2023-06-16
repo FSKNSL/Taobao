@@ -53,7 +53,7 @@
                 </div>
                 <div class="card-footer">
                     <div>
-                        <a class="btn btn-primary stretched-link">查看详情</a>
+                        <a target="_parent" th:href="@{/User2/showItemDetail}+'?item_id='+${item.item_id}" class="btn btn-primary stretched-link">查看详情</a>
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@
                 </div>
                 <div class="card-footer">
                     <div>
-                        <a class="btn btn-primary stretched-link">查看详情</a>
+                        <a target="_parent" th:href="@{/User2/showItemDetail}+'?item_id='+${item.item_id}" class="btn btn-primary stretched-link">查看详情</a>
                     </div>
                 </div>
             </div>
@@ -92,7 +92,7 @@
                     <p class="card-text" th:text="${item.item_profile}"></p>
                 </div>
                 <div class="card-footer">
-                    <a class="btn btn-primary stretched-link">查看详情</a>
+                    <a target="_parent" th:href="@{/User2/showItemDetail}+'?item_id='+${item.item_id}" class="btn btn-primary stretched-link">查看详情</a>
                 </div>
             </div>
         </div>

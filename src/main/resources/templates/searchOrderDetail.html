@@ -40,23 +40,30 @@
         </div>
     </div>
 </nav>
-<div class="row" style="padding-inline: 0">
+<div class="container">
+    <a th:href="@{/User2/searchOrders}+'?user_id='+${session.user_id}"><button type="button" class="btn btn-outline-dark">返回</button></a>
+</div>
+<div class="row" style="padding-inline: 0" th:each="order,iterStat:${result.data}">
+    <hr>
     <div class="col-md-3 offset-md-2">
-        <form method="post"  accept-charset="utf-8" enctype="multipart/form-data">
-            <div class="card bg-dark text-white shadow">
-                <img src="/image/huawei.jpg" class="card-img index-img" alt="" height="100%" width="100%" id="previewimg">
-            </div>
-        </form>
+        <div class="card bg-dark text-white shadow">
+            <img th:src="${order.orderitem.item_url}" class="card-img index-img" alt="" height="100%" width="100%" id="previewimg">
+        </div>
     </div>
     <div class="col-md-4 order-md-1 offset-1">
-        <h1 class="display-5 mt-3"><i class="bi bi-hand-thumbs-up"></i>商品详细信息</h1>
+        <h3 class="display-5 mt-3"><i class="bi bi-hand-thumbs-up"></i>订单商品详细信息</h3>
+        <dl class="row g-3">
+            <dt class="col-md-3">商品名称</dt>
+            <dd class="col-md-9"><h4 th:text="${order.orderitem.item_name}"></h4></dd>
 
-    </div>
-</div>
-<h5 class="text-center mt-2"><i class="bi bi-magic"></i>详情</h5>
-<div class="container">
-    <div class="row">
-
+            <dt class="col-md-3">商品总价</dt>
+            <dd class="col-md-9">
+                <h4 th:text="${order.pay_price}" style="color: orangered"></h4>
+                享受折扣：<strong th:text="${order.total_discount}*100+'%'" style="color: red"></strong>
+            </dd>
+            <dt class="col-md-3">商品数量</dt>
+            <dd class="col-md-9"><p th:text="${order.item_number}"></p></dd>
+        </dl>
     </div>
 </div>
 </body>

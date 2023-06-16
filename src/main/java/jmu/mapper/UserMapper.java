@@ -2,6 +2,7 @@ package jmu.mapper;
 
 import jmu.vo.*;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.FetchType;
 
 import java.util.List;
 import java.util.Map;
@@ -62,6 +63,12 @@ public interface UserMapper {
 
     /*买家查看订单详情*/
     @Select("select * from orderdetail where  order_id=#{order_id}")
+    @Results({
+            @Result(id = true,property = "orderdetail_id",column = "orderdetail_id"),
+            @Result(property = "orderitem",column = "item_id",
+                    javaType = Orderitem.class,
+                    one = @One(select = "jmu.mapper.UserMapper.searchItemByid",fetchType = FetchType.LAZY))
+    })
     public  List<Orderdetail>  searchOrderdetail(String order_id);
 
 /*根据订单详情的商品id显示所有商品*/
