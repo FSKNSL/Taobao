@@ -139,6 +139,8 @@ public interface UserMapper {
     @Select("select * from  pay where user_id=#{user_id}")
     public   List<Pay> listAllPay(String user_id);
 
+    @Update("update userinfo set user_avatar=#{user_avatar} where user_id=#{user_id}")
+    public int updateAvatar(String user_id,String user_avatar);
 
 
 }

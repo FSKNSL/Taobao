@@ -65,9 +65,16 @@
             $("#total").html(total.toFixed(2));
             $("#checkOrder").click();
         }
+        function che(){
+            var msg = [[${result.msg}]];
+            if (msg!=""){
+                $("#modal-error-info").html(msg);
+                $("#btn-modal-error").click();
+            }
+        }
     </script>
 </head>
-<body>
+<body onload="che()">
 <nav class="navbar navbar-dark bg-warning navbar-expand-lg">
     <div class="container-fluid text-white">
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -108,7 +115,7 @@
 
             <dt class="col-md-3">商品价格</dt>
             <dd class="col-md-9">
-                <h2 th:text="${result.data.item_price}" style="color: orangered"></h2>
+                <h2><del th:text="${result.data.item_price}" style="color: orangered"></del>       <small th:text="${result.data.item_price}*${result.data.item_discount}" style="color: orangered"></small></h2>
                 限时折扣：<strong th:text="${result.data.item_discount}*100+'%'" style="color: red"></strong>
             </dd>
 
@@ -119,13 +126,13 @@
             <div class="col-md-10">
                 <div class="number-box">
                     <input type="button" class="on-number" value="-" data-v="-1">
-                    <label for="number"></label><input class="form-control" id="number" type="text" value="0">
+                    <label for="number"></label><input class="form-control" id="number" type="text" value="1">
                     <input type="button" class="on-number" value="+" data-v="1">
                 </div>
             </div>
             <h5 class="text-center mt-2"><i class="bi bi-magic"></i>购买</h5>
             <div class="col-md-3">
-                <a th:href="@{/User2//addShoppingCart}" type="button" class="btn btn-outline-dark">加入购物车</a>
+                <a th:href="@{/User2/addShoppingCart}+'?item_id='+${result.data.item_id}" type="button" class="btn btn-outline-dark">加入购物车</a>
             </div>
             <div class="col-md-3">
                 <button class="btn btn-warning" onclick="check()">立即下单</button>
@@ -137,7 +144,7 @@
 <form th:action="@{/User2/addOrder}" th:method="post" th:class="form-horizontal" role="form" id="insertForm">
     <div class="modal fade" id="insertOrder"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <!--  定义模态框，过渡效果为淡入，id为myModal,tabindex=-1可以禁用使用tab切换，aria-labelledby用于引用模态框的标题，aria-hidden=true保持模态框在触发前窗口不可见  -->
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-xl">
             <!--  显示模态框对话框模型（若不写下一个div则没有颜色）  -->
             <div class="modal-content">
                 <!--  显示模态框白色背景，所有内容都写在这个div里面  -->
@@ -167,8 +174,8 @@
 
                                     <dt class="col-md-3">商品单价</dt>
                                     <dd class="col-md-9">
-                                        <p th:text="${result.data.item_price}" style="color: orangered"></p>
-                                        限时折扣：<strong th:text="${result.data.item_discount}" style="color: red"></strong>
+                                        <h4><del th:text="${result.data.item_price}" style="color: orangered"></del>       <small th:text="${result.data.item_price}*${result.data.item_discount}" style="color: orangered"></small></h4>
+                                        限时折扣：<strong th:text="${result.data.item_discount}*100+'%'" style="color: red"></strong>
                                     </dd>
                                     <dt class="col-md-3">商品介绍</dt>
                                     <dd class="col-md-9"><p th:text="${result.data.item_profile}"></p></dd>
@@ -178,7 +185,7 @@
                                         <label for="num">购买数量</label><input id="num" name="item_number" class="form-control" value="" readonly="readonly">
                                     </div>
                                     <div class="col-md-6">
-                                        <input class="form-control" name="user_id" th:value="${session.user_id}" hidden="hidden">
+                                        <input class="form-control" name="item_id" th:value="${result.data.item_id}" hidden="hidden">
                                     </div>
                                 </form>
                             </div>
@@ -197,6 +204,25 @@
         </div>
     </div> <!-- /.modal -->
 </form>
+<button id="btn-modal-error" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-error" hidden></button>
+<div class="modal fade" id="modal-error" tabindex="-1" aria-labelledby="modal-error" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    温馨提示
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-warning text-center">
+                    <span id="modal-error-info"></span>
+                </h5>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     $(document.documentElement).on("click", ".on-number", function() {
         var $val = $(this).siblings("input[type='text']"),

@@ -6,13 +6,18 @@ import jmu.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.print.attribute.standard.PresentationDirection;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -216,8 +221,8 @@ public class UserController2 {
         Map<String,Object> itemprice=userService.getItemPrice(item_id);
         BigDecimal price=(BigDecimal)itemprice.get("item_price");
         BigDecimal discount=(BigDecimal)itemprice.get("item_discount");
-        BigDecimal result = price.multiply(BigDecimal.valueOf(item_number));
-        BigDecimal Itemprice=discount.multiply(result);
+        BigDecimal res = price.multiply(BigDecimal.valueOf(item_number));
+        BigDecimal Itemprice=discount.multiply(res);
         System.out.println("itemprice="+Itemprice);
         /*获取当前日志时间*/
         Date date=new Date();
@@ -241,9 +246,9 @@ public class UserController2 {
         orders.setShipment_status("未发货");
         orders.setOrder_totalprice(Itemprice);
         boolean flag=userService.addOrder(orders);
-        String msg=flag!=false?"用户添加订单成功!":"添加订单失败";
+         String msg1=flag!=false?"用户添加订单成功!":"添加订单失败";
 
-        Result  result1= new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag,msg);
+        Result  result1= new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag,msg1);
 
         /*这里用户在商品界面勾选了响应的商品后可点击下单按钮,订单会根据用户的选择来生成相应的订单详情记录*/
 
@@ -261,7 +266,11 @@ public class UserController2 {
         Result result2=new Result(flag2?Code.INSERT_OK:Code.INSERT_ERR,flag2,msg2);
         model.addAttribute("result1",result1);
         model.addAttribute("result2",result2);
-
+        List<Orders> ordersList=userService.searchOrders(user_id);
+        Integer code=ordersList!=null?Code.GET_OK:Code.GET_ERR;
+        String msg=ordersList!=null?"订单已生成":"该用户尚未下单!";
+        Result result= new Result(code,ordersList,msg);
+        model.addAttribute("result",result);
         /*返回到了下订单完成界面*/
         return "searchOrders";
 
@@ -374,7 +383,7 @@ public class UserController2 {
         String user_id=(String)request.getSession().getAttribute("user_id");
         List<Shoppingcart>shoppingcartList=userService.listAllCart(user_id);
         Integer code=shoppingcartList!=null?Code.GET_OK:Code.GET_ERR;
-        String msg=shoppingcartList!=null?"购物车信息如下":"购物车空空如也,byd还不快来买";
+        String msg=shoppingcartList!=null?"":"购物车空空如也,byd还不快来买";
         Result result=  new Result(code,shoppingcartList,msg);
         model.addAttribute("result",result);
         /*跳转至购物车界面,在此界面能够结算或返回商品页面继续浏览*/
@@ -386,7 +395,7 @@ public class UserController2 {
     /*点击商品加入购物车*/
     /*在商品列表页添加购物车,应该传入orderitem的一些信息*/
     @RequestMapping("/addShoppingCart")
-    public String   addShopping(String item_id,Model model)
+    public String   addShopping(@RequestParam String item_id,Model model)
     {
         String user_id=(String)request.getSession().getAttribute("user_id");
         /*session自动获取user_id*/
@@ -402,11 +411,12 @@ public class UserController2 {
         /*商品数量默认为1,进入购物车界面可通过点击修改*/
         boolean flag=userService.addShoppingCart(shoppingcart);
         String msg = flag!=false ?"加入成功":"加入失败";
-        Result result= new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag,msg);
+        orderitem=userService.searchItemByid(item_id);
+        Result result= new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,orderitem,msg);
         model.addAttribute("result",result);
 
         /*这里的返回页面前端可自定义,可选择去购物车结算还是继续购物*/
-        return "doaddShoppingCart";
+        return "showItemDetail";
     }
 
 
@@ -415,27 +425,30 @@ public class UserController2 {
     /*主要是对商品数量的的修改*/
 
     @RequestMapping("/alterShoppingCart")
-    public String alterShoppingCart(int item_number,int cart_id,Model model)
+    public String alterShoppingCart(@RequestParam(value = "item_number", required = true) int item_number,@RequestParam(value = "cart_id", required = true) int cart_id,Model model)
     {
         Integer rows=userService.alterShoppingCart(item_number,cart_id);
         Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
-        String msg=rows!=0?"购物车信息更新成功":"购物车信息更新失败,请重试!";
+        String msg=rows!=0?"":"购物车信息更新失败,请重试!";
         Result result = new Result(code,rows,msg);
         model.addAttribute("result",result);
         /*修改完成后依然在购物车界面,提示信息?*/
-        return  "redirct:/listAllCart";
+        return  "redirect:/listAllCart";
     }
 
     /*按照传入的cart_id删除一条购物车记录*/
     @RequestMapping("/deleteShoppingcart")
-    public String  deleteShoppingcart(int cart_id,Model model)
+    public String  deleteShoppingcart(@RequestParam int cart_id,Model model)
     {
         Integer rows=userService.deleteShoppingcart(cart_id);
         Integer code=rows!=0?Code.DELETE_OK:Code.DELETE_ERR;
         String msg=rows!=0?"购物车删除成功":"购物车信息未成功删除,请重试!";
-        Result result= new Result(code,rows,msg);
+        String user_id=(String)request.getSession().getAttribute("user_id");
+        List<Shoppingcart>shoppingcartList=userService.listAllCart(user_id);
+        Result result= new Result(code,shoppingcartList,msg);
+        model.addAttribute("result",result);
         /*删除完成后依然在购物车界面,提示信息?*/
-        return "shopShoppingcart";
+        return "shoppingCart";
     }
 
 
@@ -454,7 +467,30 @@ public class UserController2 {
         return  "";
     }
 
-
+    @RequestMapping("/updateAvatar")
+    public String updateAvatar(@RequestParam MultipartFile file,Model model) throws IOException {
+        String user_id=(String)request.getSession().getAttribute("user_id");
+        String fileName = file.getOriginalFilename();
+        //获取文件后缀名。也可以在这里添加判断语句，规定特定格式的图片才能上传，否则拒绝保存。
+        String suffixName = fileName.substring(fileName.lastIndexOf("."));
+        Integer rows;
+        if (!suffixName.equals(".jpg")&& !suffixName.equals(".png")){
+            rows=0;
+        }else {
+        //为了避免发生图片替换，这里使用了文件名重新生成
+        fileName = UUID.randomUUID()+suffixName;
+        String path = ResourceUtils.getURL("classpath:").getPath()+"static/image/";
+        file.transferTo(new File(path+fileName));
+        String datapath = "/image/"+fileName;
+        rows = userService.updateAvatar(user_id,datapath);
+        }
+        Userinfo userinfo=userService.showUserInfo(user_id);
+        Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
+        String msg=rows!=0?"头像上传成功":"文件格式错误";
+        Result result = new Result(code,userinfo,msg);
+        model.addAttribute("result",result);
+        return "personCenter";
+    }
 
 
 

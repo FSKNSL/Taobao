@@ -150,4 +150,9 @@ public class UserServiceImpl implements UserService {
     public List<Pay> listAllPay(String user_id) {
         return userMapper.listAllPay(user_id);
     }
+
+    @Override
+    public int updateAvatar(String user_id,String user_avatar) {
+        return userMapper.updateAvatar(user_id,user_avatar);
+    }
 }
