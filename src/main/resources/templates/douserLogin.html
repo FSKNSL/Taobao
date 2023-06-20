@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" class="no-ie" style="overflow:hidden;">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,8 +10,16 @@
     <link rel="stylesheet"  href="/css/ycc.css" th:href="@{/css/ycc.css}">
     <script src="/js/jquery-3.6.0-min.js"></script>
     <script src="/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
+    <script th:inline="javascript">
+        function check(){
+            var frame = $("#iframe_a");
+            var frameheight = $(window).height()-70;
+            console.log(frameheight);
+            frame.css("height",frameheight);
+        }
+    </script>
 </head>
-<body>
+<body onload="check()">
 <!-- 首部导航栏 -->
 <nav class="navbar navbar-dark bg-light navbar-expand-lg navbar-static-top">
     <div class="container-fluid text-dark">
@@ -72,11 +80,11 @@
     </div>
 </nav>
 <div class="container">
-    <div style="height: 2400px">
-        <iframe th:src="@{/User2/main}" width="100%" height="100%" name="iframe_a" frameborder="0" scrolling="no"></iframe>
+    <div >
+        <iframe th:src="@{/User2/main}" id="iframe_a" width="100%" name="iframe_a" frameborder="0" scrolling="yes"></iframe>
     </div>
 </div>
-<div style="position: fixed; left: 0; bottom: 0; margin-inline: auto; width: 100%; z-index:9999" class="text-center">
+<div style="position: fixed; left: 0; bottom: 0; margin-inline: auto; width: 100%; z-index:999" class="text-center">
     <p>CopyRight © 2023 jmu宿舍 </p>
 </div>
 </body>

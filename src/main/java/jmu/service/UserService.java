@@ -68,4 +68,6 @@ public interface UserService {
 
     public   List<Pay> listAllPay(String user_id);/*用户查看自己的支付记录*/
 
+    public int updateAvatar(String user_id,String user_avatar); /*修改头像*/
+
 }

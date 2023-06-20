@@ -41,30 +41,108 @@
         }
     </style>
 </head>
-<body>
-<p></p>
-<ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-    <li class="nav-item" role="presentation">
-        <button class="active btn btn-default btn-circle" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">全部</button>
-    </li>
-    &nbsp;  &nbsp;  &nbsp;
-    <li class="nav-item" role="presentation">
-        <button class="btn btn-default btn-circle" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">电子</button>
-    </li>
-    &nbsp;  &nbsp;  &nbsp;
-    <li class="nav-item" role="presentation">
-        <button class="btn btn-default btn-circle" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">服饰</button>
-    </li>
-    &nbsp;  &nbsp;  &nbsp;
-    <li class="nav-item" role="presentation">
-        <button class="btn btn-default btn-circle" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false">生活</button>
-    </li>
-</ul>
-<div class="tab-content" id="pills-tabContent">
-    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">...</div>
-    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">...</div>
-    <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">...</div>
-    <div class="tab-pane fade" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabindex="0">...</div>
+<body style="overflow-x:hidden">
+<div class="container-fluid">
+    <p></p>
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="active btn btn-default btn-circle" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">全部</button>
+        </li>
+        &nbsp;  &nbsp;  &nbsp;
+        <li class="nav-item" role="presentation">
+            <button class="btn btn-default btn-circle" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">电子</button>
+        </li>
+        &nbsp;  &nbsp;  &nbsp;
+        <li class="nav-item" role="presentation">
+            <button class="btn btn-default btn-circle" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">服饰</button>
+        </li>
+        &nbsp;  &nbsp;  &nbsp;
+        <li class="nav-item" role="presentation">
+            <button class="btn btn-default btn-circle" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false">生活</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
+            <hr>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="col" th:each="item,iterStat:${result2.data}">
+                    <div class="card h-100" >
+                        <img th:src="${item.item_url}" class="card-img-top" alt="..." style="height: 280px">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${item.item_price}" style="color: orangered"></h5>
+                            <small class="text-muted" th:text="${item.item_name}"></small>
+                            <p class="card-text" th:text="${item.item_profile}"></p>
+                        </div>
+                        <div class="card-footer">
+                            <div>
+                                <a target="_parent" th:href="@{/User2/showItemDetail}+'?item_id='+${item.item_id}" class="btn btn-primary stretched-link">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
+            <hr>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="col" th:each="item,iterStat:${result2.data}" th:if="${item.category_id}eq'CG_01'">
+                    <div class="card h-100" >
+                        <img th:src="${item.item_url}" class="card-img-top" alt="..." style="height: 280px">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${item.item_price}" style="color: orangered"></h5>
+                            <small class="text-muted" th:text="${item.item_name}"></small>
+                            <p class="card-text" th:text="${item.item_profile}"></p>
+                        </div>
+                        <div class="card-footer">
+                            <div>
+                                <a target="_parent" th:href="@{/User2/showItemDetail}+'?item_id='+${item.item_id}" class="btn btn-primary stretched-link">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
+            <hr>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="col" th:each="item,iterStat:${result2.data}" th:if="${item.category_id}eq'CG_02'">
+                    <div class="card h-100" >
+                        <img th:src="${item.item_url}" class="card-img-top" alt="..." style="height: 280px">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${item.item_price}" style="color: orangered"></h5>
+                            <small class="text-muted" th:text="${item.item_name}"></small>
+                            <p class="card-text" th:text="${item.item_profile}"></p>
+                        </div>
+                        <div class="card-footer">
+                            <div>
+                                <a target="_parent" th:href="@{/User2/showItemDetail}+'?item_id='+${item.item_id}" class="btn btn-primary stretched-link">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-disabled" role="tabpanel" aria-labelledby="pills-disabled-tab" tabindex="0">
+            <hr>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="col" th:each="item,iterStat:${result2.data}" th:if="${item.category_id}eq'CG_03'">
+                    <div class="card h-100" >
+                        <img th:src="${item.item_url}" class="card-img-top" alt="..." style="height: 280px">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${item.item_price}" style="color: orangered"></h5>
+                            <small class="text-muted" th:text="${item.item_name}"></small>
+                            <p class="card-text" th:text="${item.item_profile}"></p>
+                        </div>
+                        <div class="card-footer">
+                            <div>
+                                <a target="_parent" th:href="@{/User2/showItemDetail}+'?item_id='+${item.item_id}" class="btn btn-primary stretched-link">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>
