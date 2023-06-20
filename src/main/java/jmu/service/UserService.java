@@ -77,4 +77,9 @@ public interface UserService {
 
     public List<Orderitem> selectOrderitemByKeyword(String keyword);
 
+    public  boolean   deleteshoppingcartByid(int  cart_id);
+
+    public List<Map<String, Object>> getUserTotalSales(@Param("user_id") String user_id);
+
+
 }

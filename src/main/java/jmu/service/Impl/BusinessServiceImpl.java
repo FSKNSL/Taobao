@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BusinessServiceImpl implements BusinessService {
@@ -68,5 +69,21 @@ public class BusinessServiceImpl implements BusinessService {
     @Override
     public String findCompanyidByname(String company_id) {
         return businessMapper.findCompanyidByname(company_id);
+    }
+
+    @Override
+    public boolean addOrderitem(Orderitem orderitem) {
+        businessMapper.addOrderitem(orderitem);
+        return true;
+    }
+
+    @Override
+    public List<Orderitem> showOrderitemByBusinessid(String business_id) {
+        return businessMapper.showOrderitemByBusinessid(business_id);
+    }
+
+    @Override
+    public List<Map<String, Object>> getBusinessTotalSales(String business_id) {
+        return businessMapper.getBusinessTotalSales(business_id);
     }
 }

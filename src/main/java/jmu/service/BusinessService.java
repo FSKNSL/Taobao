@@ -2,9 +2,11 @@ package jmu.service;
 
 
 import jmu.vo.*;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 public interface BusinessService {
@@ -28,4 +30,11 @@ public interface BusinessService {
 
     public boolean   AddWaybill(Waybill waybill);
     public String findCompanyidByname(String company_id);
+
+    public   boolean addOrderitem(Orderitem orderitem);
+
+    public   List<Orderitem>  showOrderitemByBusinessid(String business_id);
+
+    public List<Map<String,Object>> getBusinessTotalSales(@Param("business_id")String business_id);
+
 }

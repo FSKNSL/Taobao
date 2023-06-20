@@ -170,4 +170,14 @@ public class UserServiceImpl implements UserService {
     public List<Orderitem> selectOrderitemByKeyword(String keyword) {
         return userMapper.selectOrderitemByKeyword(keyword);
     }
+
+    @Override
+    public boolean deleteshoppingcartByid(int  cart_id) {
+        return userMapper.deleteshoppingcartByid(cart_id);
+    }
+
+    @Override
+    public List<Map<String, Object>> getUserTotalSales(String user_id) {
+        return userMapper.getUserTotalSales(user_id);
+    }
 }

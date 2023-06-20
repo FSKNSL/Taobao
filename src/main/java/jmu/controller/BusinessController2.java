@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Controller
@@ -172,6 +173,63 @@ public class BusinessController2 {
         return  "showbusinessByBusiness_id";
 
     }
+
+    /*商家增加商品*/
+    @RequestMapping("/addOrderitem")
+    public String  addOrderitem(Orderitem orderitem,Model model)
+    {
+
+        boolean flag=businessService.addOrderitem(orderitem);
+        Integer code=flag!=false?Code.INSERT_OK:Code.INSERT_ERR;
+        String msg=flag!=false?"添加商品成功!":"添加商品失败!";
+        Result result=new Result(code,flag,msg);
+        model.addAttribute("result",result);
+
+        /*返回到商家查看自己店铺所对应的订单商品界面*/
+        return  "showOrderitemByBusinessid";
+    }
+
+
+
+    /*商家展示所有商品界面*/
+    @RequestMapping("/showOrderitemByBusinessid")
+    public String showOrderitemBusinessid(Model model)
+    {
+        String business_id=(String)request.getSession().getAttribute("business_id");
+        List<Orderitem> orderitemList=businessService.showOrderitemByBusinessid(business_id);
+        return "showOrderitemByBusinessid";
+    }
+
+
+    /*展示某商店各个商品的销售报表*/
+    /*柱状统计图示例*/
+    @RequestMapping("/getBusinessTotalSales")
+    public   String  getBusinessTotalSales(Model model)
+    {
+        String business_id=(String)request.getSession().getAttribute("business_id");
+        List<Map<String,Object>>businessTotalSales=businessService.getBusinessTotalSales(business_id);
+        Integer code=businessTotalSales!=null?Code.GET_OK:Code.GET_ERR;
+        String msg=businessTotalSales!=null?"":"未取得商店商品消费报表!请重试";
+       Result result =new Result(code,businessTotalSales,msg);
+       model.addAttribute("result",result);
+
+       /*跳转到商品的销售报表界面*/
+       return  "getBusinessTotalSales";
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

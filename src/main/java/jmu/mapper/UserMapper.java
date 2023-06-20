@@ -3,6 +3,7 @@ package jmu.mapper;
 import jmu.vo.*;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.mapping.FetchType;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Map;
@@ -162,5 +163,19 @@ public interface UserMapper {
     @Select("SELECT * FROM orderitem WHERE item_name LIKE CONCAT('%', #{keyword}, '%')")
     public List<Orderitem> selectOrderitemByKeyword(String keyword);
 
+    /*购物车的删除,批量下单后自动删除购物车*/
+    @Delete("delete from  shoppingcart where  cart_id=#{cart_id}")
+    public  boolean   deleteshoppingcartByid(int  cart_id);
+
+    /*生成某卖家在各个商店的消费报表*/
+
+    @Select("SELECT b.business_id as business_id, sum( od.pay_price) as total_sales " +
+            "FROM orders o " +
+            "INNER JOIN orderdetail od on od.order_id = o.order_id " +
+            "INNER JOIN orderitem oi on oi.item_id = od.item_id " +
+            "INNER JOIN business b on b.business_id = oi.business_id " +
+            "WHERE o.user_id = #{user_id} " +
+            "GROUP BY b.business_id")
+    public  List<Map<String, Object>> getUserTotalSales(@Param("user_id") String user_id);
 
 }

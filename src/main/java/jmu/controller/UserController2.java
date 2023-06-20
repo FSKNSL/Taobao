@@ -528,6 +528,7 @@ public class UserController2 {
         orders.setShipment_status("未发货");
         /*接收前端传递的total_price价格*/
         orders.setOrder_totalprice(order_totalprice);
+        boolean flag1=userService.addOrder(orders);
 
 
         /*Step2:根据cart_id的数量创建多个订单详情*/
@@ -548,10 +549,8 @@ public class UserController2 {
             orderdetail.setPay_price(Itemprice);
             orderdetail.setTotal_discount(discount);
             boolean flag=userService.addOrderdetail(orderdetail);
-            Integer code=flag!=false?Code.INSERT_OK:Code.INSERT_ERR;
-            String msg=flag!=false?"":"生成订单详情失败!";
-            Result result=new Result(code,flag,msg);
-            model.addAttribute("result",result);
+            boolean flag2=userService.deleteshoppingcartByid(cart[i]);
+
 
         }
 
@@ -559,6 +558,8 @@ public class UserController2 {
         /*购物车完成批量下单返回页面*/
         return "shoppingCart";
     }
+
+
 
 
     /*对商品的模糊查询*/
@@ -571,6 +572,23 @@ public class UserController2 {
         Result result=new Result(code,orderitemList,msg);
         model.addAttribute("result",result);
         return "searchItemByKeyword";
+    }
+
+
+
+    /*展示某买家在各个商品某月的消费报表*/
+
+    @RequestMapping("/getUserTotalSales")
+    public String  getUserTotalSales(String user_id,Model model)
+    {
+        List<Map<String,Object>>getUserTotalSales=userService.getUserTotalSales(user_id);
+        Integer code=getUserTotalSales!=null?Code.GET_OK:Code.GET_ERR;
+        String msg=getUserTotalSales!=null?"":"未取得该用户的商品消费报表!请重试";
+        Result result=new Result(code,getUserTotalSales,msg);
+        model.addAttribute("result",result);
+        /*跳转到用户消费报表*/
+        return "getUserTotalSales";
+
     }
 
 

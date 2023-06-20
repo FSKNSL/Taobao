@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/Business")
@@ -91,6 +92,18 @@ public class BusinessController {
 
 
     }
+
+   @RequestMapping("/getBusinessTotalSales")
+        public   Result getBusinessTotalSales(String business_id)
+        {
+            List<Map<String,Object>>businessTotalSales=businessService.getBusinessTotalSales(business_id);
+            Integer code=businessTotalSales!=null?Code.GET_OK:Code.GET_ERR;
+            String msg=businessTotalSales!=null?"":"未取得商店商品消费报表!请重试";
+            return new Result(code,businessTotalSales,msg);
+
+
+        }
+
 
 
 

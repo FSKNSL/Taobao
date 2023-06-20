@@ -2,12 +2,10 @@ package jmu.mapper;
 
 
 import jmu.vo.*;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 public interface BusinessMapper {
@@ -61,6 +59,30 @@ public interface BusinessMapper {
     /*根据快递公司名称查找相应的公司id*/
     @Select("select  company_id from couriercompanies where company_name=#{company_name}")
     public String findCompanyidByname(String company_id);
+
+    /*商家新增商品*/
+
+    @Insert("insert into orderitem values(#{item_id},#{business_id},#{category_id},#{item_name},#{item_url},#{item_profile},#{item_price},#{item_discount},#{inventory})")
+    public   boolean addOrderitem(Orderitem orderitem);
+
+    /*商家查看自己店铺所对应得商品*/
+    @Select("select * from orderitem where business_id=#{business_id}")
+    public   List<Orderitem>  showOrderitemByBusinessid(String business_id);
+
+
+    /*根据每个商家对应的商品生成消费报表*/
+    /*String中为商品id,Object表示商品销售数额*/
+    @Select("SELECT oi.item_name as item_name, sum(od.pay_price) as total_sales " +
+            "FROM orderdetail od " +
+            "INNER JOIN orders o on od.order_id = o.order_id " +
+            "INNER JOIN orderitem oi on od.item_id = oi.item_id " +
+            "INNER JOIN business b on oi.business_id = b.business_id " +
+            "WHERE b.business_id = #{business_id} " +
+            "GROUP BY oi.item_name")
+    public List<Map<String,Object>> getBusinessTotalSales(@Param("business_id")String business_id);
+
+
+
 
 
 

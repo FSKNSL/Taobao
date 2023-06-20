@@ -282,6 +282,21 @@ public class UserController {
         return new Result(code,rows,msg);
     }
 
+    /*生成某用户在各个商店的消费报表*/
+    @RequestMapping("/getUserTotalSales")
+    public Result getUserTotalSales(String user_id)
+    {
+        List<Map<String,Object>>getUserTotalSales=userService.getUserTotalSales(user_id);
+        Integer code=getUserTotalSales!=null?Code.GET_OK:Code.GET_ERR;
+        String msg=getUserTotalSales!=null?"":"未取得该用户的商品消费报表!请重试";
+        return new Result(code,getUserTotalSales,msg);
+
+    }
+
+
+
+
+
 
 
 
