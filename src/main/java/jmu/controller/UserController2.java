@@ -579,8 +579,9 @@ public class UserController2 {
     /*展示某买家在各个商品某月的消费报表*/
 
     @RequestMapping("/getUserTotalSales")
-    public String  getUserTotalSales(String user_id,Model model)
+    public String  getUserTotalSales(Model model)
     {
+        String user_id=(String) request.getSession().getAttribute("user_id");
         List<Map<String,Object>>getUserTotalSales=userService.getUserTotalSales(user_id);
         Integer code=getUserTotalSales!=null?Code.GET_OK:Code.GET_ERR;
         String msg=getUserTotalSales!=null?"":"未取得该用户的商品消费报表!请重试";
