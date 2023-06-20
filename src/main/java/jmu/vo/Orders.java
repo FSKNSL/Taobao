@@ -3,6 +3,7 @@ package jmu.vo;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 public class Orders {
@@ -14,4 +15,5 @@ public class Orders {
     private BigDecimal order_totalprice;
     private   String receipt_status;
     private   String shipment_status;
+    private List<Orderdetail> orderdetailList;
 }

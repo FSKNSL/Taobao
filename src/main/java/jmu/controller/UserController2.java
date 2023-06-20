@@ -143,7 +143,6 @@ public class UserController2 {
     }
 
 
-
     /*新增收货地址的user_id通过requst自动获取*/
     @RequestMapping("/addAddress")
     public  String  addAddress(Address address,Model model)
@@ -204,10 +203,13 @@ public class UserController2 {
     public String showItemDetail(@RequestParam String item_id,Model model)
     {
         Orderitem orderitem=userService.searchItemByid(item_id);
+        String user_id=(String)request.getSession().getAttribute("user_id");
+        List<Address>addressList=userService.showAddress(user_id);
         Integer code=orderitem!=null?Code.GET_OK:Code.GET_ERR;
         String msg=orderitem!=null?"":"该用户尚未购买商品!";
         Result result=new  Result(code,orderitem,msg);
         model.addAttribute("result",result);
+        model.addAttribute("address",addressList);
         return "showItemDetail";
     }
 
@@ -216,7 +218,7 @@ public class UserController2 {
 /*详情页面添加订单或添加购物车*/
     @RequestMapping("/addOrder")
     /*前端页面勾选商品,传递相应的商品id*/
-    public   String    addOrders(String item_id,int item_number,Model model)
+    public   String    addOrders(String item_id,int item_number,String detail_address,Model model)
     {
         Map<String,Object> itemprice=userService.getItemPrice(item_id);
         BigDecimal price=(BigDecimal)itemprice.get("item_price");
@@ -467,6 +469,7 @@ public class UserController2 {
         return  "";
     }
 
+    //头像
     @RequestMapping("/updateAvatar")
     public String updateAvatar(@RequestParam MultipartFile file,Model model) throws IOException {
         String user_id=(String)request.getSession().getAttribute("user_id");

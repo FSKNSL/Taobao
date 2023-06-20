@@ -45,12 +45,12 @@
 </div>
 <div class="row" style="padding-inline: 0" th:each="order,iterStat:${result.data}">
     <hr>
-    <div class="col-md-3 offset-md-2">
+    <div class="col-md-2 offset-md-2">
         <div class="card bg-dark text-white shadow">
             <img th:src="${order.orderitem.item_url}" class="card-img index-img" alt="" height="100%" width="100%" id="previewimg">
         </div>
     </div>
-    <div class="col-md-4 order-md-1 offset-1">
+    <div class="col-md-3 order-md-1 offset-1">
         <h6 class="display-5 mt-3"><i class="bi bi-hand-thumbs-up"></i>详情</h6>
         <dl class="row g-3">
             <dt class="col-md-3">商品名称</dt>
