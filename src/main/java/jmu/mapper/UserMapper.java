@@ -59,6 +59,13 @@ public interface UserMapper {
     public   int  alterUserInfo(String user_id,String user_nickname,String user_email,String user_tel,String user_pwd);
     /*买家查看订单*/
     @Select("select * from  orders where user_id=#{user_id}")
+    @Results({
+            @Result(id = true,property = "order_id",column = "order_id"),
+            @Result(property = "orderdetailList",column = "order_id",
+                    javaType = List.class,
+                    many = @Many(select = "jmu.mapper.UserMapper.searchOrderdetail",
+                            fetchType = FetchType.LAZY))
+    })
     public List<Orders> searchOrders(String  user_id);
 
     /*买家查看订单详情*/

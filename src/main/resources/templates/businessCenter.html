@@ -13,16 +13,14 @@
     <script th:inline="javascript">
         function check(){
             var msg = [[${result.msg}]];
-            if (msg!="" || msg.eq("用户信息更新成功!") || msg.eq("用户更新失败,请重试!")){
+            if (msg!="" || msg.eq("商家信息更新成功!") || msg.eq("商家更新失败,请重试!")){
                 $("#modal-error-info").html(msg);
                 $("#btn-modal-error").click();
             }
         }
     </script>
 </head>
-<body style="overflow: hidden" onload="check()">
-
-<!-- 首部导航栏 -->
+<body>
 <nav class="navbar navbar-dark bg-warning navbar-expand-lg">
     <div class="container-fluid text-white">
         <div class="navbar-header">
@@ -34,10 +32,7 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul class="navbar-nav me-lg-2 mb-0 mb-lg-1">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" th:href="@{/User2/login(user_id=${session.user_id},user_pwd=${session.user_pwd})}" style="color: #2c3034"><i class="bi bi-house"></i>首页</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" style="color: #2aabd2"><i class="bi bi-person-fill"></i>个人中心</a>
+                    <a class="nav-link active" style="color: #2aabd2"><i class="bi bi-person-fill"></i>商家中心</a>
                 </li>
             </ul>
             <ul class="navbar-nav" style="margin-left: auto">
@@ -51,47 +46,41 @@
         </div>
     </div>
 </nav>
-
-
 <div class="row" style="padding-inline: 0">
     <div class="col-md-3 offset-md-2">
-        <form th:action="@{/User2/updateAvatar}" th:method="post"  accept-charset="utf-8" enctype="multipart/form-data">
+        <form  accept-charset="utf-8" enctype="multipart/form-data">
             <div class="card bg-dark text-white shadow">
-                <img th:src="${result.data.user_avatar}" class="card-img index-img" alt="" height="100%" width="100%" id="previewimg">
+                <img th:src="${result.data.business_avatar}" class="card-img index-img" alt="" height="100%" width="100%" id="previewimg">
             </div>
             <div class="mb-3 input-group">
                 <input type="file" class="form-control" id="img" name="file" />
-                <label class="input-group-text" for="img">上传头像</label>
+                <label class="input-group-text" for="img">上传商店图标</label>
             </div>
             <button  type="submit" class="btn btn-default btn-outline-success">发布</button>
         </form>
     </div>
     <div class="col-md-4 order-md-1 offset-1">
-        <h1 class="display-5 mt-3"><i class="bi bi-hand-thumbs-up"></i>个人信息</h1>
+        <h1 class="display-5 mt-3"><i class="bi bi-hand-thumbs-up"></i>商店信息</h1>
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>温馨提示:</strong>   用户id无法更改;  头像图片后缀格式为png、jpg
+            <strong>温馨提示:</strong>   商家id无法更改;  头像图片后缀格式为png、jpg
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <form th:action="@{/User2/alterUserInfo}" th:method="post" class="row g-3">
+        <form class="row g-3">
             <div class="col-md-6">
-                <label for="user_id" class="form-label">User_id</label>
-                <input type="text" class="form-control" id="user_id" name="user_id" readonly="readonly" th:value="${result.data.user_id}" />
+                <label for="user_id" class="form-label">商家_id</label>
+                <input type="text" class="form-control" id="user_id" name="business_id" readonly="readonly" th:value="${result.data.business_id}" />
             </div>
             <div class="col-md-6">
                 <label for="user_pwd" class="form-label">Password</label>
-                <input type="password" class="form-control" id="user_pwd" name="user_pwd" th:value="${result.data.user_pwd}" />
+                <input type="password" class="form-control" id="user_pwd" name="business_pwd" th:value="${result.data.business_pwd}" />
             </div>
             <div class="col-md-6">
-                <label for="user_nickname" class="form-label">Nickname</label>
-                <input type="text" class="form-control" id="user_nickname" name="user_nickname" placeholder="随意" th:value="${result.data.user_nickname}" />
+                <label for="user_nickname" class="form-label">商店名</label>
+                <input type="text" class="form-control" id="user_nickname" name="store_name" placeholder="随意" th:value="${result.data.store_name}" />
             </div>
             <div class="col-md-6">
-                <label for="user_email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="user_email" name="user_email" placeholder="123@1234.123" th:value="${result.data.user_email}" />
-            </div>
-            <div class="col-md-6">
-                <label for="user_tel" class="form-label">Telephone</label>
-                <input type="text" class="form-control" id="user_tel" name="user_tel" th:value="${result.data.user_tel}" />
+                <label for="user_tel" class="form-label">联系电话</label>
+                <input type="text" class="form-control" id="user_tel" name="business_tel" th:value="${result.data.business_tel}" />
             </div>
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">修改</button>
@@ -103,40 +92,40 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4">
-            <a th:href="@{/User2/searchOrders}+'?user_id='+${session.user_id}">
+            <a th:href="@{/Business2/showOrdersByBusiness_id}">
                 <button type="button" class="btn btn-success position-relative w-100 fst-italic shadow">
                     <i class="bi bi-shop"></i>
-                    我的订单
+                    商品订单
                 </button>
             </a>
             <div class="card-body shadow font-monospace">
-                记录购买的商品<i class="bi bi-check"></i>
+                记录被购买的商品<i class="bi bi-check"></i>
                 包括商品图片/名称/描述价格
             </div>
         </div>
         <div class="col-md-4">
-            <a th:href="@{/User2/listAllCart}+'?user_id='+${session.user_id}">
+            <a >
                 <button type="button" class="btn btn-warning position-relative w-100 fst-italic shadow">
                     <i class="bi bi-cart4"></i>
-                    购物车
+                    商品信息
                 </button>
             </a>
             <div class="card-body shadow font-monospace">
-                记录浏览的商品<i class="bi bi-check"></i>
-                直接购买
+                记录商家商品<i class="bi bi-check"></i>
+                上架商品
             </div>
         </div>
 
         <div class="col-md-4">
-            <a th:href="@{/User2/showAddress}">
+            <a >
                 <button type="button" class="btn btn-info position-relative w-100 fst-italic shadow">
                     <i class="bi bi-person-circle"></i>
-                    收货地址
+                    数据统计
                 </button>
             </a>
             <div class="card-body shadow font-monospace">
-                多个地址选择<i class="bi bi-check"></i>
-                管理收货地址<i class="bi bi-check"></i>
+                销量报表<i class="bi bi-check"></i>
+                收入报表<i class="bi bi-check"></i>
             </div>
         </div>
 

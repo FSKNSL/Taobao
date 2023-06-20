@@ -50,15 +50,39 @@
         </li>
         &nbsp;  &nbsp;  &nbsp;
         <li class="nav-item" role="presentation">
-            <button class="btn btn-default btn-circle" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">电子</button>
+            <button class="btn btn-default btn-circle" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">手机</button>
         </li>
         &nbsp;  &nbsp;  &nbsp;
         <li class="nav-item" role="presentation">
-            <button class="btn btn-default btn-circle" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">服饰</button>
+            <button class="btn btn-default btn-circle" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">电脑</button>
         </li>
         &nbsp;  &nbsp;  &nbsp;
         <li class="nav-item" role="presentation">
-            <button class="btn btn-default btn-circle" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false">生活</button>
+            <button class="btn btn-default btn-circle" id="pills-disabled-tab" data-bs-toggle="pill" data-bs-target="#pills-disabled" type="button" role="tab" aria-controls="pills-disabled" aria-selected="false">平板</button>
+        </li>
+        &nbsp;  &nbsp;  &nbsp;
+        <li class="nav-item" role="presentation">
+            <button class="btn btn-default btn-circle" id="pills-1-tab" data-bs-toggle="pill" data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-1" aria-selected="false">短袖</button>
+        </li>
+        &nbsp;  &nbsp;  &nbsp;
+        <li class="nav-item" role="presentation">
+            <button class="btn btn-default btn-circle" id="pills-2-tab" data-bs-toggle="pill" data-bs-target="#pills-2" type="button" role="tab" aria-controls="pills-2" aria-selected="false">长裤</button>
+        </li>
+        &nbsp;  &nbsp;  &nbsp;
+        <li class="nav-item" role="presentation">
+            <button class="btn btn-default btn-circle" id="pills-3-tab" data-bs-toggle="pill" data-bs-target="#pills-3" type="button" role="tab" aria-controls="pills-3" aria-selected="false">礼服</button>
+        </li>
+        &nbsp;  &nbsp;  &nbsp;
+        <li class="nav-item" role="presentation">
+            <button class="btn btn-default btn-circle" id="pills-4-tab" data-bs-toggle="pill" data-bs-target="#pills-4" type="button" role="tab" aria-controls="pills-4" aria-selected="false">狗粮</button>
+        </li>
+        &nbsp;  &nbsp;  &nbsp;
+        <li class="nav-item" role="presentation">
+            <button class="btn btn-default btn-circle" id="pills-5-tab" data-bs-toggle="pill" data-bs-target="#pills-5" type="button" role="tab" aria-controls="pills-5" aria-selected="false">装饰</button>
+        </li>
+        &nbsp;  &nbsp;  &nbsp;
+        <li class="nav-item" role="presentation">
+            <button class="btn btn-default btn-circle" id="pills-6-tab" data-bs-toggle="pill" data-bs-target="#pills-6" type="button" role="tab" aria-controls="pills-6" aria-selected="false">生活</button>
         </li>
     </ul>
     <div class="tab-content" id="pills-tabContent">
@@ -126,6 +150,126 @@
             <hr>
             <div class="row row-cols-1 row-cols-md-4 g-4">
                 <div class="col" th:each="item,iterStat:${result2.data}" th:if="${item.category_id}eq'CG_03'">
+                    <div class="card h-100" >
+                        <img th:src="${item.item_url}" class="card-img-top" alt="..." style="height: 280px">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${item.item_price}" style="color: orangered"></h5>
+                            <small class="text-muted" th:text="${item.item_name}"></small>
+                            <p class="card-text" th:text="${item.item_profile}"></p>
+                        </div>
+                        <div class="card-footer">
+                            <div>
+                                <a target="_parent" th:href="@{/User2/showItemDetail}+'?item_id='+${item.item_id}" class="btn btn-primary stretched-link">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-1" role="tabpanel" aria-labelledby="pills-1-tab" tabindex="0">
+            <hr>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="col" th:each="item,iterStat:${result2.data}" th:if="${item.category_id}eq'CG_04'">
+                    <div class="card h-100" >
+                        <img th:src="${item.item_url}" class="card-img-top" alt="..." style="height: 280px">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${item.item_price}" style="color: orangered"></h5>
+                            <small class="text-muted" th:text="${item.item_name}"></small>
+                            <p class="card-text" th:text="${item.item_profile}"></p>
+                        </div>
+                        <div class="card-footer">
+                            <div>
+                                <a target="_parent" th:href="@{/User2/showItemDetail}+'?item_id='+${item.item_id}" class="btn btn-primary stretched-link">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-2" role="tabpanel" aria-labelledby="pills-2-tab" tabindex="0">
+            <hr>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="col" th:each="item,iterStat:${result2.data}" th:if="${item.category_id}eq'CG_05'">
+                    <div class="card h-100" >
+                        <img th:src="${item.item_url}" class="card-img-top" alt="..." style="height: 280px">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${item.item_price}" style="color: orangered"></h5>
+                            <small class="text-muted" th:text="${item.item_name}"></small>
+                            <p class="card-text" th:text="${item.item_profile}"></p>
+                        </div>
+                        <div class="card-footer">
+                            <div>
+                                <a target="_parent" th:href="@{/User2/showItemDetail}+'?item_id='+${item.item_id}" class="btn btn-primary stretched-link">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-3" role="tabpanel" aria-labelledby="pills-3-tab" tabindex="0">
+            <hr>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="col" th:each="item,iterStat:${result2.data}" th:if="${item.category_id}eq'CG_06'">
+                    <div class="card h-100" >
+                        <img th:src="${item.item_url}" class="card-img-top" alt="..." style="height: 280px">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${item.item_price}" style="color: orangered"></h5>
+                            <small class="text-muted" th:text="${item.item_name}"></small>
+                            <p class="card-text" th:text="${item.item_profile}"></p>
+                        </div>
+                        <div class="card-footer">
+                            <div>
+                                <a target="_parent" th:href="@{/User2/showItemDetail}+'?item_id='+${item.item_id}" class="btn btn-primary stretched-link">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-4" role="tabpanel" aria-labelledby="pills-4-tab" tabindex="0">
+            <hr>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="col" th:each="item,iterStat:${result2.data}" th:if="${item.category_id}eq'CG_07'">
+                    <div class="card h-100" >
+                        <img th:src="${item.item_url}" class="card-img-top" alt="..." style="height: 280px">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${item.item_price}" style="color: orangered"></h5>
+                            <small class="text-muted" th:text="${item.item_name}"></small>
+                            <p class="card-text" th:text="${item.item_profile}"></p>
+                        </div>
+                        <div class="card-footer">
+                            <div>
+                                <a target="_parent" th:href="@{/User2/showItemDetail}+'?item_id='+${item.item_id}" class="btn btn-primary stretched-link">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-5" role="tabpanel" aria-labelledby="pills-5-tab" tabindex="0">
+            <hr>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="col" th:each="item,iterStat:${result2.data}" th:if="${item.category_id}eq'CG_08'">
+                    <div class="card h-100" >
+                        <img th:src="${item.item_url}" class="card-img-top" alt="..." style="height: 280px">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${item.item_price}" style="color: orangered"></h5>
+                            <small class="text-muted" th:text="${item.item_name}"></small>
+                            <p class="card-text" th:text="${item.item_profile}"></p>
+                        </div>
+                        <div class="card-footer">
+                            <div>
+                                <a target="_parent" th:href="@{/User2/showItemDetail}+'?item_id='+${item.item_id}" class="btn btn-primary stretched-link">查看详情</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-6" role="tabpanel" aria-labelledby="pills-6-tab" tabindex="0">
+            <hr>
+            <div class="row row-cols-1 row-cols-md-4 g-4">
+                <div class="col" th:each="item,iterStat:${result2.data}" th:if="${item.category_id}eq'CG_09'">
                     <div class="card h-100" >
                         <img th:src="${item.item_url}" class="card-img-top" alt="..." style="height: 280px">
                         <div class="card-body">
