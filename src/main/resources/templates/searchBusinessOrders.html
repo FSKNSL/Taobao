@@ -35,7 +35,7 @@
             </ul>
             <ul class="navbar-nav" style="margin-left: auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/loginOut" style="color: #2c3034">
+                    <a class="nav-link" th:href="@{/User2/logout}" style="color: #2c3034">
                         <i class="bi bi-backspace-reverse"></i>
                         退出登陆
                     </a>
@@ -50,10 +50,10 @@
         <div class="col-md-10 offset-md-1">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item" role="presentation" >
-                    <button class="nav-link" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="false">全部</button>
+                    <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all-tab-pane" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="false">全部</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="unpaid-tab" data-bs-toggle="tab" data-bs-target="#unpaid-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="true">未付款</button>
+                    <button class="nav-link" id="unpaid-tab" data-bs-toggle="tab" data-bs-target="#unpaid-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="true">未付款</button>
                 </li>
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="paid-tab" data-bs-toggle="tab" data-bs-target="#paid-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane" aria-selected="false">未发货</button>
@@ -62,7 +62,7 @@
         </div>
         <div class="col-md-10 offset-md-1">
             <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
+                <div class="tab-pane fade show active" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
                     <table class="table align-middle">
                         <thead>
                         <tr>
@@ -70,7 +70,7 @@
                             <th scope="col">运单号</th>
                             <th scope="col">下单时间</th>
                             <th scope="col">实付款</th>
-                            <th scope="col">操作</th>
+                            <th scope="col">发货状态</th>
                         </tr>
                         </thead>
                         <tbody class="table-group-divider" th:each="order,iterStat:${result.data}">
@@ -79,22 +79,22 @@
                             <td th:text="${order.waybill_id}"></td>
                             <td th:text="${order.create_time}"></td>
                             <td th:text="${order.order_totalprice}"></td>
-                            <td ><a ><button class="btn btn-outline-dark">详情</button></a></td>
+                            <td th:text="${order.shipment_status}"></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <div class="tab-pane fade show active" id="unpaid-tab-pane" role="tabpanel" aria-labelledby="unpaid-tab" tabindex="0">
+                <div class="tab-pane fade" id="unpaid-tab-pane" role="tabpanel" aria-labelledby="unpaid-tab" tabindex="0">
                     <table class="table align-middle">
                         <thead>
                         <tr>
                             <th scope="col">订单id</th>
                             <th scope="col">运单号</th>
                             <th scope="col">下单时间</th>
-                            <th scope="col">实付款</th>
+                            <th scope="col">需付款</th>
                         </tr>
                         </thead>
-                        <tbody class="table-group-divider" th:each="order,iterStat:${result.data}">
+                        <tbody class="table-group-divider" th:each="order,iterStat:${result.data}" th:if="${order.order_status}eq'未付款'">
                         <tr>
                             <td th:text="${order.order_id}"></td>
                             <td th:text="${order.waybill_id}"></td>
@@ -115,14 +115,13 @@
                             <th scope="col">操作</th>
                         </tr>
                         </thead>
-                        <tbody class="table-group-divider" th:each="order,iterStat:${result.data}">
+                        <tbody class="table-group-divider" th:each="order,iterStat:${result.data}" th:if="${order.shipment_status}eq'未发货'">
                         <tr>
                             <td th:text="${order.order_id}"></td>
                             <td th:text="${order.waybill_id}"></td>
                             <td th:text="${order.create_time}"></td>
                             <td th:text="${order.order_totalprice}"></td>
-                            <td ><a ><button class="btn btn-outline-dark">发货</button></a></td>
-                            <td ><a ><button class="btn btn-outline-dark">详情</button></a></td>
+                            <td ><a th:href="@{/Business2/ShipOrder}+'?order_id='+${order.order_id}"><button class="btn btn-outline-dark">发货</button></a></td>
                         </tr>
                         </tbody>
                     </table>

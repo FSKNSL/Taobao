@@ -42,7 +42,7 @@
             </ul>
             <ul class="navbar-nav" style="margin-left: auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/loginOut" style="color: #2c3034">
+                    <a class="nav-link" th:href="@{/User2/logout}" style="color: #2c3034">
                         <i class="bi bi-backspace-reverse"></i>
                         退出登陆
                     </a>
@@ -103,7 +103,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-4">
-            <a th:href="@{/User2/searchOrders}+'?user_id='+${session.user_id}">
+            <a th:href="@{/User2/searchOrders}">
                 <button type="button" class="btn btn-success position-relative w-100 fst-italic shadow">
                     <i class="bi bi-shop"></i>
                     我的订单
@@ -139,7 +139,17 @@
                 管理收货地址<i class="bi bi-check"></i>
             </div>
         </div>
-
+        <div class="col-md-4">
+            <a th:href="@{/User2/getUserTotalSales}">
+                <button type="button" class="btn btn-danger position-relative w-100 fst-italic shadow">
+                    <i class="bi bi-person-circle"></i>
+                    我的消费
+                </button>
+            </a>
+            <div class="card-body shadow font-monospace">
+                查看我的消费报表<i class="bi bi-check"></i>
+            </div>
+        </div>
     </div>
 </div>
 <button id="btn-modal-error" type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-error" hidden></button>

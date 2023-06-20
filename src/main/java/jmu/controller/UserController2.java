@@ -1,6 +1,7 @@
 package jmu.controller;
 
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import jmu.service.UserService;
 import jmu.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -170,8 +171,9 @@ public class UserController2 {
 
     /*用户查看订单*/
     @RequestMapping("/searchOrders")
-    public String  searchOrders(@RequestParam String user_id,Model model)
+    public String  searchOrders(Model model)
     {
+        String user_id=(String)request.getSession().getAttribute("user_id");
         List<Orders> ordersList=userService.searchOrders(user_id);
         Integer code=ordersList!=null?Code.GET_OK:Code.GET_ERR;
         String msg=ordersList!=null?"":"该用户尚未下单!";
@@ -244,7 +246,6 @@ public class UserController2 {
         orders.setUser_id(user_id);
         orders.setCreate_time(create_time);
         orders.setOrder_status("未支付");
-        orders.setReceipt_status("未收货");
         orders.setShipment_status("未发货");
         orders.setOrder_totalprice(Itemprice);
         boolean flag=userService.addOrder(orders);
@@ -310,6 +311,7 @@ public class UserController2 {
         String payment = payments[index]; // 根据下标获取对应的支付方式
        pay.setPay_method(payment);
         pay.setPay_number(String.valueOf(randomNum));
+        boolean flag = userService.payOrders2(pay);
         Result result= new Result(code,ordersList,msg);
         model.addAttribute("result",result);
 
@@ -318,6 +320,18 @@ public class UserController2 {
 
     }
 
+    @RequestMapping("/updateReceiptStatus")
+    public String updateReceiptStatus(int orderdetail_id, Model model)
+    {
+        Integer rows = userService.updateReceiptStatus(orderdetail_id,"已收货");
+        Integer code=rows!=0?Code.GET_OK:Code.GET_ERR;
+        String msg=rows!=0?"收货成功":"收获失败";
+        String user_id=(String)request.getSession().getAttribute("user_id");
+        List<Orders> ordersList=userService.searchOrders(user_id);
+        Result result = new Result(code,ordersList,msg);
+        model.addAttribute("result",result);
+        return "searchOrders";
+    }
 
     /*用户评价订单*/
 
@@ -325,7 +339,7 @@ public class UserController2 {
     /*需要传入参数:订单编号*/
 
     @RequestMapping("/doappraiseOrders")
-    public String dooappraiseOrders(String order_id,Model model)
+    public String dooappraiseOrders(@RequestParam String order_id,Model model)
     {
         String user_id=(String)request.getSession().getAttribute("user_id");
         /*session自动获取user_id*/
@@ -347,8 +361,10 @@ public class UserController2 {
     {
         boolean flag=userService.appraiseOrders(appraise);
         String msg=flag!=false?"用户评价成功,感谢您的参与":"未成功评价,请重试!";
-        Result result=new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,flag,msg);
-
+        String user_id=(String)request.getSession().getAttribute("user_id");
+        List<Orders> ordersList=userService.searchOrders(user_id);
+        Result result=new Result(flag?Code.INSERT_OK:Code.INSERT_ERR,ordersList,msg);
+        model.addAttribute("result",result);
         /*这里的是一个返回结果界面*/
         /*可更改为模态框*/
         return  "searchOrders";
@@ -377,17 +393,21 @@ public class UserController2 {
         return "showAllItems";
     }
 
+
+
     /*用户查看购物车*/
 
     @RequestMapping("/listAllCart")
     public String   listAllCart(Model model)
     {
         String user_id=(String)request.getSession().getAttribute("user_id");
+        List<Address>addressList=userService.showAddress(user_id);
         List<Shoppingcart>shoppingcartList=userService.listAllCart(user_id);
         Integer code=shoppingcartList!=null?Code.GET_OK:Code.GET_ERR;
         String msg=shoppingcartList!=null?"":"购物车空空如也,byd还不快来买";
         Result result=  new Result(code,shoppingcartList,msg);
         model.addAttribute("result",result);
+        model.addAttribute("address",addressList);
         /*跳转至购物车界面,在此界面能够结算或返回商品页面继续浏览*/
         return "shoppingCart";
     }
@@ -496,10 +516,11 @@ public class UserController2 {
     }
 
 
+
     /*对购物车商品批量下单,需要传入参数cart_id*/
     /*生成一个订单操作,并且一个订单对应响应商品数量的订单详情*/
     @RequestMapping("/PayShoppingCart")
-    public String  PayShoppingCart(@RequestParam(value = "cart", required = true)int  [] cart,@RequestParam(value = "total_price", required = true)BigDecimal order_totalprice ,Model model)
+    public String  PayShoppingCart(@RequestParam(value = "cart", required = true) int[] cart,@RequestParam(value = "total_price", required = true) BigDecimal order_totalprice ,@RequestParam(value = "detail_address", required = true) String address,Model model)
 
 
 
@@ -524,7 +545,6 @@ public class UserController2 {
         orders.setUser_id(user_id);
         orders.setCreate_time(create_time);
         orders.setOrder_status("未支付");
-        orders.setReceipt_status("未收货");
         orders.setShipment_status("未发货");
         /*接收前端传递的total_price价格*/
         orders.setOrder_totalprice(order_totalprice);
@@ -551,12 +571,12 @@ public class UserController2 {
             boolean flag=userService.addOrderdetail(orderdetail);
             boolean flag2=userService.deleteshoppingcartByid(cart[i]);
 
-
         }
 
 
+
         /*购物车完成批量下单返回页面*/
-        return "shoppingCart";
+        return "searchOrders";
     }
 
 
@@ -592,7 +612,12 @@ public class UserController2 {
 
     }
 
-
+    @RequestMapping("/logout")
+    public String logout(HttpSession session,Model model){
+        session.invalidate();
+        model.addAttribute("result",new Result());
+        return "login";
+    }
 
 
 

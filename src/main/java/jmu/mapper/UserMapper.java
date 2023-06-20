@@ -65,10 +65,15 @@ public interface UserMapper {
             @Result(property = "orderdetailList",column = "order_id",
                     javaType = List.class,
                     many = @Many(select = "jmu.mapper.UserMapper.searchOrderdetail",
-                            fetchType = FetchType.LAZY))
+                            fetchType = FetchType.LAZY)),
+            @Result(property = "appraise",column = "order_id",
+                    javaType = Appraise.class,
+                    one = @One(select = "jmu.mapper.UserMapper.searchAppraiseByOid",fetchType = FetchType.LAZY))
     })
     public List<Orders> searchOrders(String  user_id);
 
+    @Select("select * from appraise where order_id=#{order_id}")
+    public Appraise searchAppraiseByOid(String order_id);
     /*买家查看订单详情*/
     @Select("select * from orderdetail where  order_id=#{order_id}")
     @Results({
@@ -81,13 +86,21 @@ public interface UserMapper {
 
 /*根据订单详情的商品id显示所有商品*/
     @Select("select * from orderitem where item_id=#{item_id}")
+    @Results({
+            @Result(id = true,property = "item_id",column = "item_id"),
+            @Result(property = "itemCateGory",column = "category_id",
+                    javaType = ItemCateGory.class,
+                    one = @One(select = "jmu.mapper.UserMapper.searchCategoryById",fetchType = FetchType.LAZY)
+            )
+    })
     public Orderitem searchItemByid(String item_id);
 
-
+    @Select("select * from itemcategory where category_id=#{category_id}")
+    public ItemCateGory searchCategoryById(String category_id);
     /*买家生成订单*/
     /*步骤 :  1.勾选商品  2.点击确认生成订单  3.可以旺订单中添加商品*/
     /*订单其他信息在用户支付后商家下单后才更新*/
-         @Insert("insert into  orders(order_id,user_id,create_time,order_status,order_totalprice,receipt_status,shipment_status) values(#{order_id},#{user_id},#{create_time},#{order_status},#{order_totalprice},#{receipt_status},#{shipment_status})")
+         @Insert("insert into  orders(order_id,user_id,create_time,order_status,order_totalprice,shipment_status) values(#{order_id},#{user_id},#{create_time},#{order_status},#{order_totalprice},#{shipment_status})")
     public    boolean addOrder(Orders orders);
 
 
@@ -177,5 +190,6 @@ public interface UserMapper {
             "WHERE o.user_id = #{user_id} " +
             "GROUP BY b.business_id")
     public  List<Map<String, Object>> getUserTotalSales(@Param("user_id") String user_id);
-
+    @Update("update orderdetail set receipt_status=#{receipt_status} where orderdetail_id=#{orderdetail_id}")
+    public int updateReceiptStatus(int orderdetail_id,String receipt_status);
 }

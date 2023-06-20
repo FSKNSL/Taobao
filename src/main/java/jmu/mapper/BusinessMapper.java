@@ -3,6 +3,7 @@ package jmu.mapper;
 
 import jmu.vo.*;
 import org.apache.ibatis.annotations.*;
+import org.apache.ibatis.mapping.FetchType;
 
 import java.util.List;
 import java.util.Map;
@@ -67,6 +68,13 @@ public interface BusinessMapper {
 
     /*商家查看自己店铺所对应得商品*/
     @Select("select * from orderitem where business_id=#{business_id}")
+    @Results({
+            @Result(id = true,property = "item_id",column = "item_id"),
+            @Result(property = "itemCateGory",column = "category_id",
+                    javaType = ItemCateGory.class,
+                    one = @One(select = "jmu.mapper.UserMapper.searchCategoryById",fetchType = FetchType.LAZY)
+            )
+    })
     public   List<Orderitem>  showOrderitemByBusinessid(String business_id);
 
 
@@ -81,7 +89,8 @@ public interface BusinessMapper {
             "GROUP BY oi.item_name")
     public List<Map<String,Object>> getBusinessTotalSales(@Param("business_id")String business_id);
 
-
+    @Update("update orderitem set item_url=#{item_url} where item_id=#{item_id}")
+    public int updateUrl(String item_url,String item_id);
 
 
 

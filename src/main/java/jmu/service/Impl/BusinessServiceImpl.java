@@ -86,4 +86,9 @@ public class BusinessServiceImpl implements BusinessService {
     public List<Map<String, Object>> getBusinessTotalSales(String business_id) {
         return businessMapper.getBusinessTotalSales(business_id);
     }
+
+    @Override
+    public int updateUrl(String item_url, String item_id) {
+        return businessMapper.updateUrl(item_url,item_id);
+    }
 }

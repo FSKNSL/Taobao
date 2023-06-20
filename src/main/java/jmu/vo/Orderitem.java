@@ -1,6 +1,7 @@
 package jmu.vo;
 
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
@@ -15,4 +16,5 @@ public class Orderitem {
     private BigDecimal item_price;
     private   BigDecimal  item_discount;
     private    int  inventory;
+    private ItemCateGory itemCateGory;
 }

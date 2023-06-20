@@ -38,9 +38,9 @@
                     <a class="nav-link" th:href="@{/User2/showAllItems}" style="color: #2c3034" target="iframe_a"><i class="bi bi-shop"></i>商品中心</a>
                 </li>
             </ul>
-            <form th:method="post" target="iframe_a" class="navbar-form navbar-left">
+            <form th:action="@{/User2/searchItemByKeyword}" th:method="post" target="iframe_a" class="navbar-form navbar-left">
                 <label>
-                    <input name="key" type="text" placeholder="输入关键词" class="form-control" style="width: 500px"/>
+                    <input name="keyword" type="text" placeholder="输入关键词" class="form-control" style="width: 500px"/>
                 </label>
                 <label>
                     <input name="uid" type="hidden" class="form-control" th:value="${session.user_id}"/>
@@ -70,7 +70,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/loginOut" style="color: #2c3034">
+                    <a class="nav-link" th:href="@{/User2/logout}" style="color: #2c3034">
                         <i class="bi bi-backspace-reverse"></i>
                         退出登陆
                     </a>

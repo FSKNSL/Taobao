@@ -92,20 +92,43 @@
             });
             $("#pay").on('click', function () {
                 var vals = [];
+                var allprice = 0;
+                var vals1 = [];
+                var address= $('#detail_address').val();
+                $("input[name='id']:checked").each(function (index, item) {
+                    vals1.push($(this).val());
+                });
+                for (var i=0;i<vals1.length;i++){
+                    allprice+=parseFloat(vals1[i]);
+                }
+                $("#allprice").html(allprice);
                 $("input[name='id']:checked").each(function (index, item) {
                     var $val = $(this).siblings("input[type='hidden']");
                     vals.push(parseInt($val.val()));
                 });
                 $.ajax({
-                    url: "/User2/alterShoppingCart",
-                    async: false,
+                    url: "/User2/PayShoppingCart",
+                    traditional: true,
                     type: "post",
                     contentType: "application/x-www-form-urlencoded",
-                    data: {cart:vals},
+                    data: {cart:vals,total_price:allprice,detail_address:address},
                     success: function(data) {
                         console.log(data);
                     }
                 });
+                window.location.href = "/User2/searchOrders";
+            });
+            $("#check").on('click', function () {
+                var allprice = 0;
+                var vals = [];
+                $("input[name='id']:checked").each(function (index, item) {
+                    vals.push($(this).val());
+                });
+                for (var i=0;i<vals.length;i++){
+                    allprice+=parseFloat(vals[i]);
+                }
+                $("#price").html(allprice);
+                $("#checkOrder").click();
             });
         });
     </script>
@@ -140,7 +163,7 @@
             </ul>
             <ul class="navbar-nav" style="margin-left: auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/loginOut" style="color: #2c3034">
+                    <a class="nav-link" th:href="@{/User2/logout}" style="color: #2c3034">
                         <i class="bi bi-backspace-reverse"></i>
                         退出登陆
                     </a>
@@ -152,7 +175,7 @@
 <br/>
 <div class="d-grid gap-2 d-md-flex justify-content-md-end container">
     总价：<span id="allprice" class="me-md-2 "></span>
-    <button id="pay" class="btn btn-danger float-end " type="button">结算</button>
+    <button id="check" class="btn btn-danger float-end " type="button">结算</button>
 </div>
 <hr>
 <!--购物车-->
@@ -209,6 +232,45 @@
         </div>
     </div>
 </div>
+<button id="checkOrder" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#insertOrder" hidden="hidden"></button>
+<div class="modal fade" id="insertOrder"  tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <!--  定义模态框，过渡效果为淡入，id为myModal,tabindex=-1可以禁用使用tab切换，aria-labelledby用于引用模态框的标题，aria-hidden=true保持模态框在触发前窗口不可见  -->
+    <div class="modal-dialog modal-xl">
+        <!--  显示模态框对话框模型（若不写下一个div则没有颜色）  -->
+        <div class="modal-content">
+            <!--  显示模态框白色背景，所有内容都写在这个div里面  -->
+
+            <div class="btn-info modal-header">
+                <!--  模态框标题  -->
+                <button type="button" class="close btn" data-bs-dismiss="modal">&times;</button>
+                <!--  关闭按钮  -->
+                <h4>确认信息</h4>
+                <!--  标题内容  -->
+            </div>
+
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-8 offset-md-2">
+                            选择收货地址：
+                            <select class="form-select" aria-label="Default select example" id="detail_address" name="detail_address">
+                                <option th:each="add,iterStat:${address}" th:value="${add.detail_address}" th:text="${add.detail_address}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <!--  模态框底部样式，一般是提交或者确定按钮 -->
+                商品总价：<strong id="price" style="color: orangered"></strong>
+                <button id="pay" class="btn btn-info">下单</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">取消</button>
+            </div>
+
+        </div><!-- /.modal-content -->
+    </div>
+</div> <!-- /.modal -->
 <script>
     $(document.documentElement).on("click", ".on-number", function() {
         var $val = $(this).siblings("input[type='text']"),

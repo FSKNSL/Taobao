@@ -180,4 +180,15 @@ public class UserServiceImpl implements UserService {
     public List<Map<String, Object>> getUserTotalSales(String user_id) {
         return userMapper.getUserTotalSales(user_id);
     }
+
+    @Override
+    public int updateReceiptStatus(int orderdetail_id,String receipt_status) {
+        return userMapper.updateReceiptStatus(orderdetail_id,receipt_status);
+    }
+
+    @Override
+    public ItemCateGory searchCategoryById(String category_id) {
+        return userMapper.searchCategoryById(category_id);
+    }
+
 }
