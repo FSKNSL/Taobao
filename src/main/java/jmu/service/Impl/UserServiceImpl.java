@@ -155,4 +155,19 @@ public class UserServiceImpl implements UserService {
     public int updateAvatar(String user_id,String user_avatar) {
         return userMapper.updateAvatar(user_id,user_avatar);
     }
+
+    @Override
+    public String selectItemidByCartId(int cart_id) {
+        return userMapper.selectItemidByCartId(cart_id);
+    }
+
+    @Override
+    public int selectItemnumberByCartId(int cart_id) {
+        return userMapper.selectItemnumberByCartId(cart_id);
+    }
+
+    @Override
+    public List<Orderitem> selectOrderitemByKeyword(String keyword) {
+        return userMapper.selectOrderitemByKeyword(keyword);
+    }
 }

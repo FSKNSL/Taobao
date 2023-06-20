@@ -70,4 +70,11 @@ public interface UserService {
 
     public int updateAvatar(String user_id,String user_avatar); /*修改头像*/
 
+
+    public String   selectItemidByCartId(int cart_id);
+
+    public   int   selectItemnumberByCartId(int cart_id);
+
+    public List<Orderitem> selectOrderitemByKeyword(String keyword);
+
 }

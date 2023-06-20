@@ -149,5 +149,18 @@ public interface UserMapper {
     @Update("update userinfo set user_avatar=#{user_avatar} where user_id=#{user_id}")
     public int updateAvatar(String user_id,String user_avatar);
 
+    /*根据shoppingcart的id查找商品id*/
+    @Select("select item_id from shoppingcart where cart_id=#{cart_id}")
+    public String   selectItemidByCartId(int  cart_id);
+
+
+    /*根据shoppingcart的id查找商品数量*/
+    @Select("select  item_number from shoppingcart where cart_id=#{cart_id}")
+    public   int   selectItemnumberByCartId(int cart_id);
+
+    /*商品的模糊查询*/
+    @Select("SELECT * FROM orderitem WHERE item_name LIKE CONCAT('%', #{keyword}, '%')")
+    public List<Orderitem> selectOrderitemByKeyword(String keyword);
+
 
 }

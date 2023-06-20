@@ -496,33 +496,82 @@ public class UserController2 {
     }
 
 
-
-
-    /*对购物车商品批量下单*/
-    /*生成一个订单操作,并且一个订单对应响应数量的订单详情*/
-
-
-
+    /*对购物车商品批量下单,需要传入参数cart_id*/
+    /*生成一个订单操作,并且一个订单对应响应商品数量的订单详情*/
+    @RequestMapping("/PayShoppingCart")
+    public String  PayShoppingCart(@RequestParam(value = "cart", required = true)int  [] cart,@RequestParam(value = "total_price", required = true)BigDecimal order_totalprice ,Model model)
 
 
 
 
+    {
+        /*Step1:创建订单*/
+        /*获取当前日志时间*/
+        Date date=new Date();
+        SimpleDateFormat dateFormat=new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+        String  create_time=dateFormat.format(date);
+        Random random = new Random();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 12; i++) {
+            sb.append(random.nextInt(10));
+        }
+        String randomNumber = sb.toString();
+        System.out.println("随机生成的十二位数为：" + randomNumber);
+        /*随机生成12位数的订单编号*/
+        Orders orders=new Orders();
+        String user_id=(String)request.getSession().getAttribute("user_id");/*获取用户id*/
+        orders.setOrder_id(String.valueOf(randomNumber));
+        orders.setUser_id(user_id);
+        orders.setCreate_time(create_time);
+        orders.setOrder_status("未支付");
+        orders.setReceipt_status("未收货");
+        orders.setShipment_status("未发货");
+        /*接收前端传递的total_price价格*/
+        orders.setOrder_totalprice(order_totalprice);
 
 
+        /*Step2:根据cart_id的数量创建多个订单详情*/
+        int length= cart.length;
+        for(int i=0;i<length;i++)
+        {
+            Orderdetail orderdetail=new Orderdetail();
+            String item_id=userService.selectItemidByCartId(cart[i]);
+            int item_number=userService.selectItemnumberByCartId(cart[i]);
+            Map<String,Object> itemprice=userService.getItemPrice(item_id);
+            BigDecimal price=(BigDecimal)itemprice.get("item_price");
+            BigDecimal discount=(BigDecimal)itemprice.get("item_discount");
+            BigDecimal res = price.multiply(BigDecimal.valueOf(item_number));
+            BigDecimal Itemprice=discount.multiply(res);
+            orderdetail.setItem_id(item_id);
+            orderdetail.setOrder_id(randomNumber);/*下面的所有订单详情对应一个订单编号*/
+            orderdetail.setItem_number(item_number);
+            orderdetail.setPay_price(Itemprice);
+            orderdetail.setTotal_discount(discount);
+            boolean flag=userService.addOrderdetail(orderdetail);
+            Integer code=flag!=false?Code.INSERT_OK:Code.INSERT_ERR;
+            String msg=flag!=false?"":"生成订单详情失败!";
+            Result result=new Result(code,flag,msg);
+            model.addAttribute("result",result);
+
+        }
 
 
+        /*购物车完成批量下单返回页面*/
+        return "shoppingCart";
+    }
 
 
-
-
-
-
-
-
-
-
-
-
+    /*对商品的模糊查询*/
+    @RequestMapping("/searchItemByKeyword")
+    public String  searchItemByKeyword(String keyword,Model model)
+    {
+        List<Orderitem>orderitemList=userService.selectOrderitemByKeyword(keyword);
+        Integer code=orderitemList!=null?Code.GET_OK:Code.GET_ERR;
+        String msg=orderitemList!=null?"":"没有查询到相关商品,请等待新商品上架!";
+        Result result=new Result(code,orderitemList,msg);
+        model.addAttribute("result",result);
+        return "searchItemByKeyword";
+    }
 
 
 
