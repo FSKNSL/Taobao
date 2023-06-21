@@ -38,7 +38,7 @@
             </ul>
             <ul class="navbar-nav" style="margin-left: auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/loginOut" style="color: #2c3034">
+                    <a class="nav-link" th:href="@{/User2/logout}" style="color: #2c3034">
                         <i class="bi bi-backspace-reverse"></i>
                         退出登陆
                     </a>
@@ -137,6 +137,7 @@
                             <th scope="col">创建时间</th>
                             <th scope="col">订单详情</th>
                             <th scope="col">订单状态</th>
+                            <th scope="col">评价</th>
                         </tr>
                         </thead>
                         <tbody class="table-group-divider" th:each="order,iterStat:${result.data}" th:if="${order.order_status}eq'已支付'">
@@ -147,17 +148,18 @@
                             <td th:text="${order.create_time}"></td>
                             <td ><a th:href="@{/User2/searchOrderDetail}+'?order_id='+${order.order_id}"><button class="btn btn-outline-warning">查看订单详情</button></a></td>
                             <td th:text="${order.order_status}"></td>
+                            <td ><a th:href="@{/User2/doappraiseOrders}+'?order_id='+${order.order_id}">对订单服务是否满意？点此评价</a></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="tab-pane fade" id="unReceive-tab-pane" role="tabpanel" aria-labelledby="unReceive-tab" tabindex="0">
                     <div th:each="order,iterStat:${result.data}">
-                        <div class="row" style="padding-inline: 0" th:each="ord,iterStat:${order.orderdetailList} ">
+                        <div class="row" style="padding-inline: 0" th:each="ord,iterStat:${order.orderdetailList}" th:if="${ord.receipt_status}eq'未收货'">
                             <hr>
                             <div class="col-md-3 offset-md-2">
                                 <div class="card bg-dark text-white shadow">
-                                    <img th:src="${ord.orderitem.item_url}" class="card-img index-img" alt="" height="100%" width="100%" id="previewimg">
+                                    <img th:src="${ord.orderitem.item_url}" class="card-img index-img" alt="" height="100%" width="100%" >
                                 </div>
                             </div>
                             <div class="col-md-4 offset-1">
@@ -216,8 +218,12 @@
                                 </div>
                             </div>
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <a ><button type="button" class="btn btn-warning me-md-2">确认收货</button></a>
-
+                                <div th:if="${order.shipment_status}eq'已发货'">
+                                    <a th:href="@{/User2/updateReceiptStatus}+'?orderdetail_id='+${ord.orderdetail_id}"><button type="button" class="btn btn-warning">确认收货</button></a>
+                                </div>
+                                <div th:if="${order.shipment_status}eq'未发货'">
+                                    <button type="button" class="btn btn-secondary" disabled>商家暂未发货</button>
+                                </div>
                             </div>
                             <p></p>
                         </div>
@@ -225,11 +231,11 @@
                 </div>
                 <div class="tab-pane fade" id="received-tab-pane" role="tabpanel" aria-labelledby="unReceive-tab" tabindex="0">
                     <div th:each="order,iterStat:${result.data}">
-                        <div class="row" style="padding-inline: 0" th:each="ord,iterStat:${order.orderdetailList} ">
+                        <div class="row" style="padding-inline: 0" th:each="ord,iterStat:${order.orderdetailList}" th:if="${ord.receipt_status}eq'已收货'">
                             <hr>
                             <div class="col-md-3 offset-md-2">
                                 <div class="card bg-dark text-white shadow">
-                                    <img th:src="${ord.orderitem.item_url}" class="card-img index-img" alt="" height="100%" width="100%" id="previewimg">
+                                    <img th:src="${ord.orderitem.item_url}" class="card-img index-img" alt="" height="100%" width="100%">
                                 </div>
                             </div>
                             <div class="col-md-4 offset-1">
@@ -246,14 +252,14 @@
                                     <dd class="col-md-9"><p th:text="${ord.item_number}"></p></dd>
                                 </dl>
                             </div>
-                            <div class="accordion col-md-8 offset-md-2" id="accordionExample">
+                            <div class="accordion col-md-8 offset-md-2" id="accordion">
                                 <div class="accordion-item">
-                                    <h2 class="accordion-header" id="headingOne">
+                                    <h2 class="accordion-header" id="heading">
                                         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                                             订单详情
                                         </button>
                                     </h2>
-                                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div id="collapse" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
                                             <div class="row">
                                                 <div class="col-md-6">

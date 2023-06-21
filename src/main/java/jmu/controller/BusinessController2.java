@@ -7,17 +7,21 @@ import jmu.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Controller
 @RequestMapping("/Business2")
@@ -27,6 +31,8 @@ public class BusinessController2 {
     HttpServletRequest request;
     @Autowired
     private BusinessService businessService;
+    @Autowired
+    private UserService userService;
     @RequestMapping("/login2")
     public String login(HttpServletRequest request, @RequestParam String business_id, @RequestParam String business_pwd, Model model)
     {
@@ -142,7 +148,7 @@ public class BusinessController2 {
 
 
         /*这里跳转到发货的表单或模态框中，传递必要的参数生成运单信息*/
-        return "showbusinessByBusiness_id";
+        return "shipOrder";
 
     }
 
@@ -150,12 +156,13 @@ public class BusinessController2 {
     @RequestMapping("/addShipment")
     public String  addShipment(Shipment shipment,Model model)
     {
-
+        String business_id=(String)request.getSession().getAttribute("business_id");
+        List<Orders> ordersList=businessService.showOrdersByBusiness_id(business_id);
         /*生成快递单*/
         boolean flag=businessService.AddShipment(shipment);
         Integer code=flag!=false?Code.INSERT_OK:Code.INSERT_ERR;
-        String msg=flag!=false?"已生成快递单":"快递单生成失败!";
-        Result result= new Result(code,flag,msg);
+        String msg=flag!=false?"发货成功":"发货失败!";
+        Result result= new Result(code,ordersList,msg);
         model.addAttribute("result",result);
 
         /*自动生成运单*/
@@ -170,23 +177,30 @@ public class BusinessController2 {
         model.addAttribute("result2",result2);
 
         /*标签形式切换订单类型*/
-        return  "showbusinessByBusiness_id";
+        return  "searchBusinessOrders";
 
     }
 
     /*商家增加商品*/
     @RequestMapping("/addOrderitem")
-    public String  addOrderitem(Orderitem orderitem,Model model)
-    {
-
+    public String  addOrderitem(Orderitem orderitem,MultipartFile file, Model model) throws IOException {
+        String fileName = file.getOriginalFilename();
+        String suffixName = fileName.substring(fileName.lastIndexOf("."));
+        fileName = UUID.randomUUID()+suffixName;
+        String path = ResourceUtils.getURL("classpath:").getPath()+"static/image/";
+        file.transferTo(new File(path+fileName));
+        String datapath = "/image/"+fileName;
+        orderitem.setItem_url(datapath);
         boolean flag=businessService.addOrderitem(orderitem);
         Integer code=flag!=false?Code.INSERT_OK:Code.INSERT_ERR;
         String msg=flag!=false?"添加商品成功!":"添加商品失败!";
-        Result result=new Result(code,flag,msg);
+        String business=(String)request.getSession().getAttribute("business_id");
+        List<Orderitem> orderitemList=businessService.showOrderitemByBusinessid(business);
+        Result result=new Result(code,orderitemList,msg);
         model.addAttribute("result",result);
 
         /*返回到商家查看自己店铺所对应的订单商品界面*/
-        return  "showOrderitemByBusinessid";
+        return  "showOrderItemById";
     }
 
 
@@ -197,7 +211,11 @@ public class BusinessController2 {
     {
         String business_id=(String)request.getSession().getAttribute("business_id");
         List<Orderitem> orderitemList=businessService.showOrderitemByBusinessid(business_id);
-        return "showOrderitemByBusinessid";
+        Integer code = orderitemList!=null?Code.GET_OK:Code.GET_ERR;
+        String msg = orderitemList!=null?"":"您还未发布商品";
+        Result result = new Result(code,orderitemList,msg);
+        model.addAttribute("result",result);
+        return "showOrderItemById";
     }
 
 

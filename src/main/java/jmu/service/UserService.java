@@ -82,4 +82,6 @@ public interface UserService {
     public List<Map<String, Object>> getUserTotalSales(@Param("user_id") String user_id);
 
 
+    public int updateReceiptStatus(int orderdetail_id,String receipt_status);
+    public ItemCateGory searchCategoryById(String category_id);
 }

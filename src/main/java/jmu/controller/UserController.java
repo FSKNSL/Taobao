@@ -157,7 +157,6 @@ public class UserController {
         orders.setUser_id(user_id);
         orders.setCreate_time(create_time);
         orders.setOrder_status("未支付");
-        orders.setReceipt_status("未收货");
         orders.setShipment_status("未发货");
         orders.setOrder_totalprice(Itemprice);
         boolean flag=userService.addOrder(orders);

@@ -36,5 +36,6 @@ public interface BusinessService {
     public   List<Orderitem>  showOrderitemByBusinessid(String business_id);
 
     public List<Map<String,Object>> getBusinessTotalSales(@Param("business_id")String business_id);
+    public int updateUrl(String item_url,String item_id);
 
 }

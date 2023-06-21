@@ -13,5 +13,6 @@ public class Orderdetail {
     private   int item_number;
     private BigDecimal pay_price;
     private BigDecimal total_discount;
+    private   String receipt_status;
     private Orderitem orderitem;
 }
