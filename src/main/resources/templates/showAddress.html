@@ -63,7 +63,7 @@
         <tr>
             <td th:text="${address.receipt_name}"></td>
             <td th:text="${address.receipt_tel}"></td>
-            <td th:text="${address.detail_address}"></td>
+            <td th:text="${address.district.city.province.province_name}+${address.district.city.city_name}+${address.district.district_name}+${address.detail_address}"></td>
             <td th:text="${address.receipt_email}"></td>
             <td><a><button class="btn btn-danger">删除</button></a></td>
         </tr>
