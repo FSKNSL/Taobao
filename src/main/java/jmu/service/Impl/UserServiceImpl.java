@@ -52,13 +52,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Province searchProByPid(String province_id) {
+        return userMapper.searchProByPid(province_id);
+    }
+
+    @Override
     public List<City> listAllCity() {
         return userMapper.listAllCity();
     }
 
     @Override
+    public City searchCityByCid(String city_id) {
+        return userMapper.searchCityByCid(city_id);
+    }
+
+    @Override
     public List<District> listAllDistrict() {
         return userMapper.listAllDistrict();
+    }
+
+    @Override
+    public District searchDisByDid(String district_id) {
+        return userMapper.searchDisByDid(district_id);
     }
 
     @Override

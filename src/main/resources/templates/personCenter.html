@@ -57,7 +57,7 @@
     <div class="col-md-3 offset-md-2">
         <form th:action="@{/User2/updateAvatar}" th:method="post"  accept-charset="utf-8" enctype="multipart/form-data">
             <div class="card bg-dark text-white shadow">
-                <img th:src="${result.data.user_avatar}" class="card-img index-img" alt="" height="100%" width="100%" id="previewimg">
+                <img src="/image/logo.png" th:src="${result.data.user_avatar}" class="card-img index-img" alt="" height="100%" width="100%" id="previewimg">
             </div>
             <div class="mb-3 input-group">
                 <input type="file" class="form-control" id="img" name="file" />

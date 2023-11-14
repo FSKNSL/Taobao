@@ -254,7 +254,7 @@
                         <div class="col-md-8 offset-md-2">
                             选择收货地址：
                             <select class="form-select" aria-label="Default select example" id="detail_address" name="detail_address">
-                                <option th:each="add,iterStat:${address}" th:value="${add.detail_address}" th:text="${add.detail_address}"></option>
+                                <option th:each="add,iterStat:${address}" th:value="${add.district.city.province.province_name}+${add.district.city.city_name}+${add.district.district_name}+${add.detail_address}" th:text="${add.district.city.province.province_name}+${add.district.city.city_name}+${add.district.district_name}+${add.detail_address}"></option>
                             </select>
                         </div>
                     </div>

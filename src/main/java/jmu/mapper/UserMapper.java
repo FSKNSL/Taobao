@@ -27,6 +27,12 @@ public interface UserMapper {
 
     /*用户查看收货地址*/
     @Select("select * from address where user_id=#{user_id}")
+    @Results({
+            @Result(id = true,property = "address_id",column = "address_id"),
+            @Result(property = "district",column = "district_id",
+                    javaType = District.class,
+                    one = @One(select = "jmu.mapper.UserMapper.searchDisByDid",fetchType = FetchType.LAZY))
+    })
     public  List<Address> showAddress(String user_id);
 
     /*用户编辑收货地址*/
@@ -37,18 +43,33 @@ public interface UserMapper {
 
     @Select("select * from province")
     public List<Province>listAllProvince();
-
+    @Select("select * from province where province_id=#{province_id}")
+    public Province searchProByPid(String province_id);
 
 
     /*传入市信息*/
     @Select("select * from  city")
     public List<City>listAllCity();
-
+    @Select("select * from city where city_id=#{city_id}")
+    @Results({
+            @Result(id = true,property = "city_id",column = "city_id"),
+            @Result(property = "province",column = "province_id",
+                    javaType = Province.class,
+                    one = @One(select = "jmu.mapper.UserMapper.searchProByPid",fetchType = FetchType.LAZY))
+    })
+    public City searchCityByCid(String city_id);
 
     /*传入区信息*/
     @Select("select * from district")
     public  List<District>listAllDistrict();
-
+    @Select("select * from district where district_id=#{district_id}")
+    @Results({
+            @Result(id = true,property = "district_id",column = "district_id"),
+            @Result(property = "city",column = "city_id",
+                    javaType = City.class,
+                    one = @One(select = "jmu.mapper.UserMapper.searchCityByCid",fetchType = FetchType.LAZY))
+    })
+    public District searchDisByDid(String district_id);
 
     /*用户新建收货地址*/
     @Insert("insert  into address(district_id,user_id,receipt_name,receipt_tel,detail_address,receipt_email)values(#{district_id},#{user_id},#{receipt_name},#{receipt_tel},#{detail_address},#{receipt_email})")

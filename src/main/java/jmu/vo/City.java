@@ -8,5 +8,5 @@ public class City {
     private String province_id;
     private  String city_name;
 
-
+    private Province province;
 }

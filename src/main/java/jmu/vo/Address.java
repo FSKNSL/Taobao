@@ -11,5 +11,5 @@ public class Address {
     private  String receipt_tel;
     private String detail_address;
     private String receipt_email;
-
+    private District district;
 }

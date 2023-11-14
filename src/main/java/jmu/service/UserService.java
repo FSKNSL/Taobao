@@ -23,16 +23,18 @@ public interface UserService {
 
     public  List<Address> showAddress(String user_id);/*查看地址信息*/
 
+
     /*根据当前地址id修改地址信息*/
     public  int  alterAddress(String district_id,String receipt_name,String receipt_tel,String detail_address,String receipt_email,String address_id);
 
 
     public List<Province>listAllProvince();
+    public Province searchProByPid(String province_id);
 
     public List<City>listAllCity();
-
+    public City searchCityByCid(String city_id);
     public  List<District>listAllDistrict();
-
+    public District searchDisByDid(String district_id);
 
     public   boolean addAddress(Address address);/*用户新增收货地址*/
 
