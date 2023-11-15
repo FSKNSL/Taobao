@@ -12,13 +12,13 @@ import java.util.Map;
 public interface BusinessService {
     public Business login(String business_id,String business_pwd);
 
-    public List<Orders> showOrdersByBusiness_id(String business_id);
-
+    public List<Orderdetail> showOrdersByBusiness_id(String business_id);
+    public Orderitem findItemById(String item_id);
     public List<Orders> showShippedOrdersByBusiness_id(String business_id);
 
     public List<Orders> showUnshippedOrdersByBusiness_id(String business_id);
 
-    public  int  alterShipmentStatus(String order_id);
+    public  int  alterShipmentStatus(String orderdetail_id);
 
     public List<String> showDetailAddressByUserid(String user_id);
 

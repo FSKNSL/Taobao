@@ -121,7 +121,7 @@ public interface UserMapper {
     /*买家生成订单*/
     /*步骤 :  1.勾选商品  2.点击确认生成订单  3.可以旺订单中添加商品*/
     /*订单其他信息在用户支付后商家下单后才更新*/
-         @Insert("insert into  orders(order_id,user_id,create_time,order_status,order_totalprice,shipment_status) values(#{order_id},#{user_id},#{create_time},#{order_status},#{order_totalprice},#{shipment_status})")
+         @Insert("insert into  orders(order_id,user_id,create_time,order_status,order_totalprice) values(#{order_id},#{user_id},#{create_time},#{order_status},#{order_totalprice})")
     public    boolean addOrder(Orders orders);
 
 

@@ -15,4 +15,5 @@ public class Orderdetail {
     private BigDecimal total_discount;
     private   String receipt_status;
     private Orderitem orderitem;
+    private String shipment_status;
 }

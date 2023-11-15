@@ -246,7 +246,6 @@ public class UserController2 {
         orders.setUser_id(user_id);
         orders.setCreate_time(create_time);
         orders.setOrder_status("未支付");
-        orders.setShipment_status("未发货");
         orders.setOrder_totalprice(Itemprice);
         boolean flag=userService.addOrder(orders);
          String msg1=flag!=false?"用户添加订单成功!":"添加订单失败";
@@ -545,11 +544,9 @@ public class UserController2 {
         orders.setUser_id(user_id);
         orders.setCreate_time(create_time);
         orders.setOrder_status("未支付");
-        orders.setShipment_status("未发货");
         /*接收前端传递的total_price价格*/
         orders.setOrder_totalprice(order_totalprice);
         boolean flag1=userService.addOrder(orders);
-
 
         /*Step2:根据cart_id的数量创建多个订单详情*/
         int length= cart.length;
@@ -572,7 +569,11 @@ public class UserController2 {
             boolean flag2=userService.deleteshoppingcartByid(cart[i]);
 
         }
-
+        List<Orders> ordersList=userService.searchOrders(user_id);
+        String msg = flag1?"下单成功请尽快支付":"下单异常";
+        Integer code =flag1?Code.GET_OK:Code.GET_ERR;
+        Result result= new Result(code,ordersList,msg);
+        model.addAttribute("result",result);
 
 
         /*购物车完成批量下单返回页面*/

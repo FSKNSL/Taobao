@@ -13,7 +13,6 @@ public class Orders {
     private  String  create_time;
     private   String  order_status;
     private BigDecimal order_totalprice;
-    private   String shipment_status;
     private List<Orderdetail> orderdetailList;
     private Appraise appraise;
 }

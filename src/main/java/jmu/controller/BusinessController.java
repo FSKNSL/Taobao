@@ -31,7 +31,7 @@ public class BusinessController {
     @RequestMapping("/showOrdersByBusiness_id")
     public  Result showOrdersByBusiness_id(String business_id)
     {
-        List<Orders> ordersList=businessService.showOrdersByBusiness_id(business_id);
+        List<Orderdetail> ordersList=businessService.showOrdersByBusiness_id(business_id);
         Integer code= ordersList!=null?Code.LOGIN_OK:Code.LOGIN_ERR;
         String msg= ordersList!=null?"查询到如下订单记录!":"订单空空如也";
         return new Result(code, ordersList,msg);

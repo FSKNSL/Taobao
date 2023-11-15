@@ -66,7 +66,7 @@ public class BusinessController2 {
     {
 
         String business_id=(String)request.getSession().getAttribute("business_id");
-        List<Orders> ordersList=businessService.showOrdersByBusiness_id(business_id);
+        List<Orderdetail> ordersList=businessService.showOrdersByBusiness_id(business_id);
         Integer code= ordersList!=null?Code.LOGIN_OK:Code.LOGIN_ERR;
         String msg= ordersList!=null?"":"订单空空如也";
         Result result=new Result(code, ordersList,msg);
@@ -112,11 +112,11 @@ public class BusinessController2 {
 
     /*对未发货订单执行发货操作*/
     @RequestMapping("/ShipOrder")
-    public String  alterShipmentStatus(String order_id,Model model)
+    public String  alterShipmentStatus(@RequestParam String orderdetail_id,@RequestParam String order_id,Model model)
     {
 
         /*1.修改订单状态*/
-        Integer rows=businessService.alterShipmentStatus(order_id);
+        Integer rows=businessService.alterShipmentStatus(orderdetail_id);
         Integer code=rows!=0?Code.UPDATE_OK:Code.UPDATE_ERR;
         String msg=rows!=0?"发货成功!":"未完成发货!";
         Result result= new Result(rows,code,msg);
@@ -157,7 +157,7 @@ public class BusinessController2 {
     public String  addShipment(Shipment shipment,Model model)
     {
         String business_id=(String)request.getSession().getAttribute("business_id");
-        List<Orders> ordersList=businessService.showOrdersByBusiness_id(business_id);
+        List<Orderdetail> ordersList=businessService.showOrdersByBusiness_id(business_id);
         /*生成快递单*/
         boolean flag=businessService.AddShipment(shipment);
         Integer code=flag!=false?Code.INSERT_OK:Code.INSERT_ERR;
