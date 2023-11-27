@@ -20,8 +20,13 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public List<Orders> showOrdersByBusiness_id(String business_id) {
+    public List<Orderdetail> showOrdersByBusiness_id(String business_id) {
         return businessMapper.showOrdersByBusiness_id(business_id);
+    }
+
+    @Override
+    public Orderitem findItemById(String item_id) {
+        return businessMapper.findItemById(item_id);
     }
 
     @Override
@@ -35,8 +40,8 @@ public class BusinessServiceImpl implements BusinessService {
     }
 
     @Override
-    public int alterShipmentStatus(String order_id) {
-        return businessMapper.alterShipmentStatus(order_id);
+    public int alterShipmentStatus(String orderdetail_id) {
+        return businessMapper.alterShipmentStatus(orderdetail_id);
     }
 
     @Override

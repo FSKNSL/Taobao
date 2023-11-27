@@ -218,10 +218,10 @@
                                 </div>
                             </div>
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                <div th:if="${order.shipment_status}eq'已发货'">
+                                <div th:if="${ord.shipment_status}eq'已发货'">
                                     <a th:href="@{/User2/updateReceiptStatus}+'?orderdetail_id='+${ord.orderdetail_id}"><button type="button" class="btn btn-warning">确认收货</button></a>
                                 </div>
-                                <div th:if="${order.shipment_status}eq'未发货'">
+                                <div th:if="${ord.shipment_status}eq'未发货'">
                                     <button type="button" class="btn btn-secondary" disabled>商家暂未发货</button>
                                 </div>
                             </div>

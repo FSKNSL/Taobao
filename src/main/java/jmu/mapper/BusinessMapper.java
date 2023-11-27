@@ -15,10 +15,20 @@ public interface BusinessMapper {
     public Business login(String business_id,String business_pwd);
 
 
-    /*买家查看所有用户下的订单*/
-    @Select(" select * from orders where order_id in(select order_id from orderdetail where item_id in(select item_id from orderitem where" +
-            " business_id=#{business_id}))")
-    public List<Orders> showOrdersByBusiness_id(String business_id);
+    /*卖家查看所有用户下的订单*/
+    @Select(" select * from orderdetail where item_id in(select item_id from orderitem where" +
+            " business_id=#{business_id})")
+    @Results({
+            @Result(id = true,property = "orderdetail_id",column = "orderdetail_id"),
+            @Result(property = "orderitem",column = "item_id",
+                    javaType = Orderitem.class,
+                    one = @One(select = "jmu.mapper.BusinessMapper.findItemById",fetchType = FetchType.LAZY))
+    })
+    public List<Orderdetail> showOrdersByBusiness_id(String business_id);
+
+    /*商品id寻找商品*/
+    @Select("select * from orderitem where item_id=#{item_id}")
+    public Orderitem findItemById(String item_id);
 
     /*商家查看已发货的订单*/
     @Select(" select * from orders where order_id in(select order_id from orderdetail where item_id in(select item_id from orderitem where" +
@@ -32,8 +42,8 @@ public interface BusinessMapper {
     public List<Orders> showUnshippedOrdersByBusiness_id(String business_id);
 
     /*买家发货step1:修改订单发货状态为'已发货'*/
-    @Update("update orders set shipment_status='已发货' where order_id=#{order_id}")
-    public  int  alterShipmentStatus(String order_id);
+    @Update("update orderdetail set shipment_status='已发货' where orderdetail_id=#{orderdetail_id}")
+    public  int  alterShipmentStatus(String orderdetail_id);
 
     /*根据订单查找到用户id*/
     @Select("select user_id  from orders where order_id=#{order_id}")
